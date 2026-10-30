@@ -36,14 +36,18 @@ const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:5173",
   "https://irhpala-panchayat-client.vercel.app",
-  "https://irhpala-panchayat-client-4mkv17ya3.vercel.app",
   process.env.CLIENT_URL,
 ].filter(Boolean);
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== "production") {
+      if (
+        !origin ||
+        process.env.NODE_ENV !== "production" ||
+        allowedOrigins.includes(origin) ||
+        /^https:\/\/irhpala-panchayat-client[\w-]*\.vercel\.app$/.test(origin)
+      ) {
         return callback(null, true);
       }
       return callback(new Error("CORS policy violation: origin not allowed"), false);
