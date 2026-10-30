@@ -1,464 +1,257 @@
-/* HeaderNav.css - Updated with better responsive and black border */
-
-/* Import Bengali font */
-@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
-
-/* Remove underline from all links */
-a {
-  text-decoration: none;
+.gov-header-nav {
+  background-color: #ffffff;
+  border-bottom: 2px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(15, 59, 108, 0.06);
+  position: sticky;
+  top: 38px;
+  z-index: 1500;
+  width: 100%;
 }
 
-.header-nav {
+.gov-header-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 8px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 9px 10px;  
-  background: linear-gradient(135deg, #ffffff 0%, #fff9f0 100%);
-  position: sticky;
-  top: 60px;
-  z-index: 1800;
-  border-bottom: 3px solid #FF9933;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.06);
 }
 
-/* Left section */
-.left {
+.gov-header-brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gov-brand-link {
   display: flex;
   align-items: center;
   gap: 12px;
-}
-
-.left a {
-  display: flex;
-  align-items: center;
   text-decoration: none;
 }
 
-.left .logo {
-  height: 45px;
+.gov-header-logo {
+  height: 48px;
   width: auto;
-  border: 2px solid #138808;
-  border-radius: 6px;
-  padding: 4px;
-  background: white;
-  transition: transform 0.2s;
+  object-fit: contain;
 }
 
-.left .logo:hover {
-  transform: scale(1.03);
-  box-shadow: 0 4px 10px rgba(19, 136, 8, 0.2);
+.gov-brand-titles {
+  display: flex;
+  flex-direction: column;
 }
 
-.left p {
-  font-family: 'Hind Siliguri', sans-serif;
-  font-size: 30px;
+.gov-brand-bengali {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  font-size: 1.25rem;
   font-weight: 700;
-  color: #000080;
-  margin: 0;
-  letter-spacing: 0.4px;
-  text-shadow: 1px 1px 0 #FFD700;
-  border-left: 2px solid #138808;
-  padding-left: 12px;
+  color: #0f3b6c;
+  line-height: 1.2;
+}
+
+.gov-brand-english {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #166534;
+  line-height: 1.2;
+}
+
+.gov-brand-sub {
+  font-size: 0.7rem;
+  color: #64748b;
+}
+
+.gov-mobile-toggle {
+  display: none;
+  background: none;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 1.25rem;
+  padding: 6px 10px;
+  color: #0f3b6c;
+  cursor: pointer;
+}
+
+/* Nav Menu */
+.gov-nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.gov-nav-item {
+  color: #1e293b;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 8px 10px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.gov-nav-item:hover {
+  color: #0f3b6c;
+  background-color: #f1f5f9;
   text-decoration: none;
 }
 
-/* Center section */
-.center {
+.gov-nav-item.active {
+  color: #0f3b6c;
+  background-color: #e0f2fe;
+  font-weight: 700;
+  border-bottom: 2px solid #0284c7;
+}
+
+.gov-nav-item.gov-admin-nav-item {
+  color: #0f3b6c;
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+}
+
+.gov-nav-item.gov-admin-nav-item:hover,
+.gov-nav-item.gov-admin-nav-item.active {
+  background-color: #0f3b6c;
+  color: #ffffff;
+  border-color: #0f3b6c;
+}
+
+/* Dropdown */
+.gov-nav-dropdown {
+  position: relative;
+}
+
+.gov-dropdown-btn {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1e293b;
+  padding: 8px 10px;
+  border-radius: 4px;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 4px;
+  transition: all 0.15s ease;
 }
 
-/* Nav items */
-.nav-item {
-  position: relative;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 16px;
-  padding: 8px 0;
-  color: #000080;
-  letter-spacing: 0.2px;
-  transition: all 0.3s;
-  background: transparent;
-  border: none;
+.gov-dropdown-btn:hover {
+  color: #0f3b6c;
+  background-color: #f1f5f9;
 }
 
-/* Down arrow with black border */
-.nav-item::after {
-  content: " ▼";
-  font-size: 0.65em;
-  margin-left: 6px;
-  color: #000080;
-  font-weight: bold;
-  transition: all 0.3s;
-  -webkit-text-stroke: 0.5px black;
-  text-stroke: 0.5px black;
+.gov-caret {
+  font-size: 0.75rem;
+  color: #64748b;
 }
 
-/* Hover effect */
-.nav-item:hover {
-  color: #FF9933;
-}
-
-.nav-item:hover::after {
-  color: #FF9933;
-  -webkit-text-stroke: 0.5px #cc7a29;
-}
-
-/* Dropdown menu - with black border */
-.dropdown {
+.gov-dropdown-menu {
   display: none;
   position: absolute;
   top: 100%;
   left: 0;
-  background: white;
-  /* box-shadow: 0 6px 15px rgba(0,0,0,0.15); */
-  padding: 8px 0;
-  border-radius: 2px;
-  min-width: 200px;
-  z-index: 2000;
-  border: 1px solid #000000;
-  margin-top: 8px;
-}
-
-.nav-item:hover .dropdown {
-  display: block;
-  animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Dropdown links */
-.dropdown a {
-  display: block;
-  padding: 10px 18px;
-  text-decoration: none;
-  color: #000080;
-  font-size: 15px;
-  font-weight: 500;
-  transition: all 0.2s;
-  font-family: 'Hind Siliguri', sans-serif;
-  text-align: left;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.dropdown a:last-child {
-  border-bottom: none;
-}
-
-.dropdown a:hover {
-  background: #FFE5CC;
-  color: #138808;
-  padding-left: 25px;
-}
-
-/* Right section */
-.right {
-  display: flex;
-  gap: 12px;
-}
-
-/* Login/Register button */
-.login-btn {
-  padding: 10px 25px;
-  background: #138808;
-  color: white;
-  border: 2px solid #000080;
+  background-color: #ffffff;
+  min-width: 250px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
   border-radius: 6px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-  letter-spacing: 0.4px;
-  white-space: nowrap;
-  font-family: 'Hind Siliguri', sans-serif;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+  padding: 6px 0;
+  z-index: 1600;
+}
+
+.gov-nav-dropdown:hover .gov-dropdown-menu,
+.gov-nav-dropdown:focus-within .gov-dropdown-menu,
+.gov-dropdown-menu.show {
+  display: block;
+}
+
+.gov-dropdown-menu a {
+  display: block;
+  padding: 10px 16px;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: #334155;
   text-decoration: none;
+  transition: background-color 0.12s ease;
 }
 
-.login-btn:hover {
-  background: #0f6d06;
-  transform: scale(1.03);
-  box-shadow: 0 5px 10px rgba(19, 136, 8, 0.2);
+.gov-dropdown-menu a:hover {
+  background-color: #f8fafc;
+  color: #0f3b6c;
 }
 
-/* ========== LAPTOP (1024px) ========== */
-@media (max-width: 1024px) {
-  .header-nav {
-    padding: 8px 15px;
-  }
-  
-  .left p {
-    font-size: 24px;
-  }
-  
-  .center {
-    gap: 15px;
-  }
-  
-  .nav-item {
-    font-size: 15px;
-  }
-  
-  .login-btn {
-    padding: 8px 20px;
-    font-size: 15px;
-  }
+/* Login Button */
+.gov-login-btn {
+  background-color: #0f3b6c;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  white-space: nowrap;
 }
 
-/* ========== TABLET (768px) ========== */
-@media (max-width: 768px) {
-  .header-nav {
-    padding: 10px 15px;
-    flex-direction: column;
-    top: 50px;
-    gap: 10px;
-    background: white;
-  }
-  
-  .left {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 5px 0;
-  }
-  
-  .left .logo {
-    height: 40px;
-    padding: 3px;
-  }
-  
-  .left p {
-    font-size: 20px;
-    padding-left: 10px;
-    border-left: 2px solid #138808;
-    white-space: normal;
-  }
-  
-  .center {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    padding: 10px;
-    background: #f5f5f5;
-    border-radius: 8px;
-    border: 2px solid #FF9933;
-  }
-  
-  .nav-item {
-    font-size: 14px;
-    padding: 6px 10px;
-    margin: 0;
-  }
-  
-  .nav-item::after {
-    font-size: 10px;
-    margin-left: 4px;
-  }
-  
-  .dropdown {
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 200px;
-    border: 2px solid #000000; /* Black border */
-    border-radius: 6px;
-    padding: 5px 0;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  }
-  
-  .dropdown a {
-    padding: 10px 15px;
-    font-size: 13px;
-    text-align: center;
-  }
-  
-  .right {
-    width: 100%;
-    margin-top: 5px;
-  }
-  
-  .login-btn {
-    width: 100%;
-    padding: 10px 20px;
-    font-size: 15px;
-  }
+.gov-login-btn:hover {
+  background-color: #092648;
 }
 
-/* ========== MOBILE (480px) ========== */
-@media (max-width: 480px) {
-  .header-nav {
-    padding: 8px 10px;
-    top: 45px;
-  }
-  
-  .left .logo {
-    height: 35px;
-    border-width: 1.5px;
-  }
-  
-  .left p {
-    font-size: 16px;
-    padding-left: 8px;
-    border-left-width: 1.5px;
-    text-shadow: 0.5px 0.5px 0 #FFD700;
-  }
-  
-  .center {
-    gap: 5px;
-    padding: 8px 5px;
-  }
-  
-  .nav-item {
-    font-size: 12px;
-    padding: 5px 8px;
-  }
-  
-  .nav-item::after {
-    font-size: 8px;
-    margin-left: 3px;
-  }
-  
-  .dropdown {
-    width: 180px;
-    min-width: 150px;
-  }
-  
-  .dropdown a {
-    padding: 8px 10px;
-    font-size: 12px;
-  }
-  
-  .login-btn {
-    padding: 8px 15px;
-    font-size: 14px;
-    border-width: 1.5px;
-  }
+.gov-login-btn.logged-in {
+  background-color: #166534;
 }
 
-/* ========== SMALL MOBILE (360px) ========== */
-@media (max-width: 360px) {
-  .left p {
-    font-size: 14px;
-  }
-  
-  .center {
-    flex-wrap: wrap;
-  }
-  
-  .nav-item {
-    font-size: 11px;
-    padding: 4px 6px;
-  }
-  
-  .nav-item::after {
-    display: inline-block; /* Keep arrow on small mobile */
-    font-size: 7px;
-  }
-  
-  .dropdown {
-    width: 150px;
-  }
-  
-  .dropdown a {
-    padding: 6px 8px;
-    font-size: 11px;
-  }
-  
-  .login-btn {
-    padding: 6px 12px;
-    font-size: 12px;
-  }
+.gov-login-btn.logged-in:hover {
+  background-color: #14532d;
 }
 
-/* ========== EXTRA SMALL (320px) ========== */
-@media (max-width: 320px) {
-  .left .logo {
-    height: 30px;
-  }
-  
-  .left p {
-    font-size: 12px;
-  }
-  
-  .nav-item {
-    font-size: 10px;
-    padding: 3px 5px;
-  }
-  
-  .nav-item::after {
-    font-size: 6px;
-  }
-}
-
-/* Touch-friendly improvements */
-@media (hover: none) and (pointer: coarse) {
-  .nav-item {
-    -webkit-tap-highlight-color: transparent;
-  }
-  
-  .nav-item:active {
-    color: #FF9933;
-  }
-  
-  .dropdown a {
-    -webkit-tap-highlight-color: transparent;
-  }
-  
-  .dropdown a:active {
-    background: #FF9933;
-    color: white;
-  }
-  
-  .login-btn {
-    -webkit-tap-highlight-color: transparent;
-  }
-  
-  .login-btn:active {
-    transform: scale(0.98);
-    background: #0f6d06;
-  }
-}
-
-/* Remove hover effects on mobile */
-@media (max-width: 768px) {
-  .nav-item:hover {
-    color: #000080;
-  }
-  
-  .nav-item:hover::after {
-    color: #000080;
-  }
-  
-  .login-btn:hover {
-    transform: none;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  }
-}
-
-/* Landscape mode */
-@media (max-height: 500px) and (orientation: landscape) {
-  .header-nav {
-    position: relative;
+/* Mobile Responsive */
+@media (max-width: 960px) {
+  .gov-header-nav {
     top: 0;
   }
-  
-  .dropdown {
-    max-height: 80vh;
-    overflow-y: auto;
+
+  .gov-mobile-toggle {
+    display: block;
+  }
+
+  .gov-header-brand {
+    width: 100%;
+  }
+
+  .gov-nav-menu {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 16px 0 12px;
+    border-top: 1px solid #e2e8f0;
+    width: 100%;
+  }
+
+  .gov-nav-menu.active {
+    display: flex;
+  }
+
+  .gov-header-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .gov-dropdown-menu {
+    position: static;
+    display: block;
+    box-shadow: none;
+    border: none;
+    padding-left: 14px;
+    background-color: #f8fafc;
+  }
+
+  .gov-login-btn {
+    width: 100%;
+    margin-top: 8px;
   }
 }

@@ -1,0 +1,214 @@
+.admin-list-page {
+  min-height: 100vh;
+  background: #f1f5f9;
+  padding-bottom: 40px;
+}
+
+.admin-list-header {
+  background: linear-gradient(135deg, #0f3b6c 0%, #1e4d8a 100%);
+  color: #ffffff;
+  padding: 20px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admin-list-header .header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.admin-list-header .govt-logo {
+  width: 44px;
+  height: 44px;
+  filter: brightness(0) invert(1);
+}
+
+.admin-list-header h1 {
+  font-size: 1.25rem;
+  margin: 0;
+  font-weight: 700;
+}
+
+.admin-list-header p {
+  margin: 2px 0 0;
+  font-size: 0.82rem;
+  opacity: 0.85;
+}
+
+.admin-list-toolbar {
+  background: #ffffff;
+  margin: 20px 32px 0;
+  padding: 14px 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.toolbar-info {
+  font-size: 0.9rem;
+  color: #334155;
+}
+
+.toolbar-info strong {
+  color: #0f3b6c;
+  font-size: 1.1rem;
+}
+
+.admin-list-toolbar .search-group {
+  display: flex;
+  gap: 10px;
+  flex-grow: 1;
+  max-width: 520px;
+}
+
+.admin-list-toolbar input[type="text"] {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.88rem;
+}
+
+.admin-list-toolbar input[type="text"]:focus {
+  outline: none;
+  border-color: #0f3b6c;
+  box-shadow: 0 0 0 2px rgba(15, 59, 108, 0.15);
+}
+
+.admin-list-table-container {
+  background: #ffffff;
+  margin: 16px 32px 0;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.admin-list-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+}
+
+.admin-list-table thead {
+  background: #f0f9ff;
+  border-bottom: 2px solid #bae6fd;
+}
+
+.admin-list-table th {
+  text-align: left;
+  padding: 12px 14px;
+  color: #0369a1;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.74rem;
+  letter-spacing: 0.5px;
+}
+
+.admin-list-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+  vertical-align: middle;
+}
+
+.admin-list-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.officer-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.officer-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0f3b6c, #1e4d8a);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.role-bdo { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+.role-member, .role-admin, .role-elected_member { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+.role-secretary { background: #e0e7ff; color: #3730a3; }
+.role-support { background: #f3e8ff; color: #6b21a8; }
+
+.status-badge.active {
+  background: #dcfce7;
+  color: #166534;
+  padding: 3px 9px;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.status-badge.inactive {
+  background: #f1f5f9;
+  color: #64748b;
+  padding: 3px 9px;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.table-loading {
+  padding: 40px;
+  text-align: center;
+  color: #64748b;
+}
+
+.gov-alert {
+  margin: 16px 32px 0;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 0.88rem;
+}
+
+.gov-alert-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
+@media (max-width: 768px) {
+  .admin-list-header,
+  .admin-list-toolbar,
+  .admin-list-table-container {
+    margin-left: 12px;
+    margin-right: 12px;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  .admin-list-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+}

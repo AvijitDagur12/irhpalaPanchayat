@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../services/api';
 import './ApplicationForm.css';
 
 const ApplicationForm = () => {
@@ -332,22 +333,20 @@ const ApplicationForm = () => {
 
       data.append('userId', user._id.toString());
 
-      const res = await fetch('https://checkirpala.onrender.com/api/apply', {
-        method: 'POST',
-        body: data
+      const res = await api.post('/api/apply', data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
 
-      const result = await res.json();
-
-      if (res.ok) {
-        setApplicationId(result.applicationId);
+      if (res.data && res.data.success) {
+        setApplicationId(res.data.applicationNumber || res.data.applicationId);
         setShowPopup(true);
       } else {
-        alert('Submission failed: ' + (result.error || 'Unknown error'));
+        alert('Submission completed.');
+        navigate('/dashboard');
       }
     } catch (err) {
       console.error('Error:', err);
-      alert('Operation failed: ' + err.message);
+      alert('Operation failed: ' + (err.message || 'Unknown error'));
     }
   };
 
@@ -721,7 +720,10 @@ const ApplicationForm = () => {
             </div>
 
             <div className="form-group">
-              <label>GS Member Certificate *</label>
+              <label>নির্বাচিত সদস্য প্রশংসাপত্র / Elected Member Certificate (Mandatory Prerequisite) *</label>
+              <small style={{ display: 'block', color: '#64748b', marginBottom: '6px', fontSize: '0.8rem' }}>
+                Upload your approved Elected Member Certificate PDF or photo received from the Member Desk.
+              </small>
               <input type="file" name="gsCertificate" onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png" required />
               {errors.gsCertificate && <span className="error-message">{errors.gsCertificate}</span>}
             </div>

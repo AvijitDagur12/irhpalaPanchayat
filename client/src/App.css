@@ -39,3 +39,7 @@ button {
   padding: 10px 20px;
   color: white;
 }
+
+.dropdown li:hover {
+  background-color: #003d99;
+}

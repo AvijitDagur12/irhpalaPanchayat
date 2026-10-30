@@ -1,439 +1,344 @@
-/* AdminLogin.css - Village Panchayat Style */
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Main Container - Warm Village Theme */
-.admin-login-container {
+/* Admin Panel Hub Styles */
+.admin-portal-wrapper {
   min-height: 100vh;
-  background: linear-gradient(145deg, #f8f0e6 0%, #e8d5b5 100%);
-  font-family: 'Poppins', sans-serif;
+  background-color: #f5f1e8;
+  font-family: 'Inter', 'Noto Sans Bengali', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #1e293b;
   display: flex;
   flex-direction: column;
+}
+
+.admin-portal-header {
+  background-color: #0f3b6c;
+  color: #ffffff;
+  padding: 16px 24px;
+  border-bottom: 3px solid #b45309;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admin-portal-header-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  padding: 15px;
-  position: relative;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
-/* Village Pattern Background */
-.admin-login-container::before {
-  content: "🏘️";
-  position: absolute;
-  font-size: 120px;
-  opacity: 0.1;
-  bottom: 20px;
-  left: 20px;
-  transform: rotate(-5deg);
-}
-
-.admin-login-container::after {
-  content: "🌾";
-  position: absolute;
-  font-size: 150px;
-  opacity: 0.1;
-  top: 20px;
-  right: 20px;
-  transform: rotate(10deg);
-}
-
-/* Header with Panchayat Info */
-.panchayat-header {
-  width: 100%;
-  max-width: 500px;
-  background: #2e7d32;
-  padding: 20px 25px;
-  border-radius: 20px 20px 0 0;
-  color: white;
-  text-align: center;
-  box-shadow: 0 10px 0 #1b5e20;
-}
-
-.panchayat-header h1 {
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  margin-bottom: 5px;
-  text-shadow: 2px 2px 0 #1b5e20;
-}
-
-.panchayat-header p {
-  font-size: 16px;
-  opacity: 0.95;
-  font-weight: 400;
-}
-
-/* Village Leaders Section - Simple Rectangle Style */
-.village-leaders {
-  width: 100%;
-  max-width: 500px;
-  background: #ffffff;
-  padding: 25px;
-  border-left: 6px solid #ff6f00;
-  border-right: 6px solid #ff6f00;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.leaders-grid {
+.portal-header-brand {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 15px;
+  gap: 14px;
 }
 
-.leader-card {
+.portal-header-emblem {
+  height: 48px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+.portal-header-brand h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+  color: #ffffff;
+}
+
+.portal-header-brand p {
+  font-size: 0.8rem;
+  color: #cbd5e1;
+  margin: 2px 0 0;
+}
+
+.admin-portal-main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 36px 20px 60px;
   flex: 1;
-  text-align: center;
-  background: #faf5eb;
-  padding: 15px 5px;
-  border: 2px solid #8d6e63;
+  width: 100%;
 }
 
-.leader-img {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 10px;
-  border: 3px solid #ff6f00;
-  background: #ffe0b2;
+/* Active Session Card */
+.admin-active-session-card {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.active-session-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.session-icon { font-size: 2rem; }
+
+.active-session-content h3 {
+  font-size: 1.05rem;
+  color: #0f3b6c;
+  margin: 0 0 4px;
+}
+
+.active-session-content p {
+  font-size: 0.85rem;
+  color: #475569;
+  margin: 0;
+}
+
+.active-session-actions { display: flex; gap: 10px; }
+
+/* Section Title */
+.section-title-box {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.section-title-box h2 {
+  font-size: 1.6rem;
+  color: #0f3b6c;
+  margin: 0 0 8px;
+}
+
+.section-title-box p {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Departments Grid */
+.portal-departments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.portal-dept-card {
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  padding: 0;
+  box-shadow: 0 4px 10px -1px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
   overflow: hidden;
 }
 
-.leader-img img {
+.portal-dept-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 22px -4px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================================
+   TOP BAND — "IRHPALA-GP"
+   ============================================================ */
+.card-top-band {
+  padding: 8px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #ffffff;
+}
+
+.card-gp-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   IDENTITY ROW — Photo | Emblem
+   ============================================================ */
+.card-identity-row {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 2px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.card-photo-box {
+  width: 96px;
+  height: 112px;
+  flex-shrink: 0;
+  background: #e2e8f0;
+  border-right: 2px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.card-photo-box img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.leader-card h3 {
-  font-size: 14px;
-  color: #3e2723;
-  font-weight: 600;
-  margin-bottom: 4px;
+.card-photo-placeholder {
+  font-size: 2.6rem;
+  color: #94a3b8;
 }
 
-.leader-card p {
-  font-size: 11px;
-  color: #ff6f00;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.village-emblem {
-  text-align: center;
-  padding: 0 5px;
-}
-
-.emblem-icon {
-  font-size: 45px;
-  line-height: 1;
-  background: #ff6f00;
-  color: white;
-  width: 70px;
-  height: 70px;
+.card-emblem-box {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 8px;
-  border: 3px solid #8d6e63;
-}
-
-.emblem-text {
-  font-size: 14px;
-  font-weight: 700;
-  color: #1b5e20;
-  letter-spacing: 1px;
-  background: #fff9c4;
-  padding: 5px 8px;
-  border: 2px solid #ff6f00;
-}
-
-/* Login Box - Clean Rectangle Design */
-.admin-login-box {
-  width: 100%;
-  max-width: 500px;
+  padding: 12px;
   background: #ffffff;
-  padding: 35px 30px;
-  border: 3px solid #8d6e63;
-  border-top: none;
-  box-shadow: 0 15px 0 #5d4037;
 }
 
-.admin-login-box h2 {
-  color: #2e7d32;
-  font-size: 32px;
+.card-emblem-box img {
+  max-height: 70px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+/* ============================================================
+   NAME + DEPT BLOCK
+   ============================================================ */
+.card-name-block {
+  padding: 14px 18px 10px;
+  border-bottom: 2px solid #e2e8f0;
+  text-align: center;
+}
+
+.card-admin-name {
+  font-size: 1.02rem;
   font-weight: 700;
-  margin-bottom: 5px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  text-shadow: 2px 2px 0 #a5d6a7;
+  color: #0f3b6c;
+  margin: 0 0 4px;
+  line-height: 1.25;
 }
 
-.admin-login-box .subtitle {
-  color: #bf360c;
-  font-size: 16px;
+.card-admin-dept {
+  font-size: 0.82rem;
   font-weight: 600;
-  margin-bottom: 30px;
-  padding-bottom: 15px;
-  border-bottom: 3px dotted #ffb74d;
-  text-transform: uppercase;
+  color: #334155;
+  margin: 0 0 4px;
+  line-height: 1.3;
 }
 
-/* Form Elements - Bold & User Friendly */
-.form-group {
+.card-admin-bengali {
+  font-size: 0.76rem;
+  color: #64748b;
+  display: block;
+  line-height: 1.3;
+}
+
+/* ============================================================
+   Card inner padding
+   ============================================================ */
+.portal-dept-card > .dept-role-badge,
+.portal-dept-card > .dept-desc,
+.portal-dept-card > .dept-card-action {
+  margin-left: 18px;
+  margin-right: 18px;
+}
+
+.portal-dept-card > .dept-role-badge {
+  margin-top: 14px;
+}
+
+.portal-dept-card > .dept-card-action {
   margin-bottom: 20px;
 }
 
-.form-group input {
-  width: 100%;
-  padding: 16px 20px;
-  background: #fff9f0;
-  border: 3px solid #8d6e63;
-  font-size: 16px;
-  font-family: 'Poppins', sans-serif;
-  color: #3e2723;
-  transition: all 0.2s ease;
+.dept-role-badge {
+  display: inline-block;
+  background: #f1f5f9;
+  color: #334155;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  align-self: flex-start;
 }
 
-.form-group input:focus {
-  outline: none;
-  border-color: #ff6f00;
+.dept-desc {
+  font-size: 0.84rem;
+  color: #475569;
+  line-height: 1.5;
+  margin-top: 12px;
+  margin-bottom: 18px;
+  flex: 1;
+}
+
+.dept-card-action {
+  margin-top: auto;
+}
+
+/* ============================================================
+   CONTROL OFFICER CARD — navy restricted theme
+   ============================================================ */
+.portal-dept-card.control-card {
+  border-color: #1e293b;
+  background: linear-gradient(180deg, #f1f5f9 0%, #ffffff 70%);
+}
+
+.portal-dept-card.control-card:hover {
+  box-shadow: 0 12px 22px -4px rgba(30, 41, 59, 0.3);
+}
+
+.portal-dept-card.control-card .card-identity-row {
+  background: #f1f5f9;
+  border-bottom-color: #cbd5e1;
+}
+
+.portal-dept-card.control-card .card-photo-box {
+  background: #e2e8f0;
+  border-right-color: #cbd5e1;
+}
+
+.portal-dept-card.control-card .card-photo-placeholder {
+  color: #1e293b;
+}
+
+.portal-dept-card.control-card .card-emblem-box {
   background: #ffffff;
-  transform: scale(1.02);
 }
 
-.form-group input::placeholder {
-  color: #a1887f;
-  font-weight: 500;
-  font-size: 15px;
+.portal-dept-card.control-card .card-name-block {
+  border-bottom-color: #cbd5e1;
 }
 
-/* Error Message */
-.admin-error {
-  background: #ffebee;
-  border: 3px solid #c62828;
-  color: #b71c1c;
-  padding: 15px 20px;
-  margin-bottom: 25px;
-  font-size: 15px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border-left: 10px solid #c62828;
+.portal-dept-card.control-card .card-admin-name {
+  color: #1e293b;
 }
 
-/* Login Button - Bold Rectangle */
-.admin-login-box button {
-  width: 100%;
-  padding: 18px;
-  background: #2e7d32;
-  border: none;
-  border: 3px solid #1b5e20;
-  color: white;
-  font-size: 20px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  margin-top: 15px;
-  box-shadow: 0 8px 0 #1b5e20;
-  font-family: 'Poppins', sans-serif;
+.portal-dept-card.control-card .dept-role-badge {
+  background: #e2e8f0;
+  color: #0f172a;
 }
 
-.admin-login-box button:hover:not(:disabled) {
-  background: #1b5e20;
-  transform: translateY(2px);
-  box-shadow: 0 6px 0 #0d4d0d;
-}
-
-.admin-login-box button:active:not(:disabled) {
-  transform: translateY(8px);
-  box-shadow: none;
-}
-
-.admin-login-box button:disabled {
-  background: #9e9e9e;
-  border-color: #757575;
-  box-shadow: 0 8px 0 #616161;
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-/* Footer - Demo Credentials */
-.admin-login-footer {
-  margin-top: 25px;
-  background: #fff3e0;
-  padding: 15px;
-  border: 3px solid #ff6f00;
-  border-top: 6px solid #ff6f00;
-}
-
-.admin-login-footer p {
-  color: #3e2723;
-  font-size: 15px;
-  font-weight: 600;
-  text-align: center;
-  background: #ffffff;
-  padding: 10px;
-  border: 2px dashed #ff6f00;
-}
-
-/* Village Footer */
-.village-footer {
-  width: 100%;
-  max-width: 500px;
-  background: #5d4037;
-  padding: 15px 25px;
-  border-radius: 0 0 20px 20px;
-  color: #ffe0b2;
-  text-align: center;
-  font-weight: 600;
-  font-size: 14px;
-  border-top: 6px solid #ffb74d;
-}
-
-.village-footer span {
-  color: #ffb74d;
-  margin: 0 10px;
-}
-
-/* Mobile Responsive - Very User Friendly */
-@media (max-width: 600px) {
-  .panchayat-header {
-    padding: 15px 20px;
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-portal-header-container {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-  .panchayat-header h1 {
-    font-size: 24px;
+  .portal-departments-grid {
+    grid-template-columns: 1fr;
   }
 
-  .panchayat-header p {
-    font-size: 14px;
+  .card-photo-box {
+    width: 80px;
+    height: 96px;
   }
 
-  .village-leaders {
-    padding: 15px;
-  }
-
-  .leaders-grid {
-    gap: 8px;
-  }
-
-  .leader-img {
-    width: 60px;
-    height: 60px;
-  }
-
-  .leader-card h3 {
-    font-size: 12px;
-  }
-
-  .leader-card p {
-    font-size: 9px;
-  }
-
-  .emblem-icon {
-    width: 50px;
-    height: 50px;
-    font-size: 30px;
-  }
-
-  .emblem-text {
-    font-size: 11px;
-    padding: 4px 6px;
-  }
-
-  .admin-login-box {
-    padding: 25px 20px;
-  }
-
-  .admin-login-box h2 {
-    font-size: 28px;
-  }
-
-  .admin-login-box .subtitle {
-    font-size: 14px;
-    margin-bottom: 20px;
-  }
-
-  .form-group input {
-    padding: 14px 16px;
-    font-size: 15px;
-  }
-
-  .admin-login-box button {
-    padding: 16px;
-    font-size: 18px;
-  }
-
-  .admin-login-footer p {
-    font-size: 13px;
-    padding: 8px;
-  }
-}
-
-/* Extra Small Devices */
-@media (max-width: 380px) {
-  .leader-img {
-    width: 45px;
-    height: 45px;
-  }
-
-  .leader-card h3 {
-    font-size: 10px;
-  }
-
-  .leader-card p {
-    font-size: 8px;
-  }
-
-  .emblem-icon {
-    width: 40px;
-    height: 40px;
-    font-size: 24px;
-  }
-
-  .admin-login-box h2 {
-    font-size: 24px;
-  }
-
-  .form-group input {
-    padding: 12px 14px;
-    font-size: 14px;
-  }
-}
-
-/* Touch-friendly for Mobile */
-@media (hover: none) and (pointer: coarse) {
-  .form-group input,
-  .admin-login-box button {
-    font-size: 16px; /* Prevents zoom on mobile */
-  }
-  
-  .admin-login-box button {
-    padding: 20px;
-  }
-}
-
-/* Landscape Mode */
-@media (max-height: 600px) and (orientation: landscape) {
-  .admin-login-container {
-    padding: 10px;
-  }
-
-  .leaders-grid {
-    max-width: 400px;
-    margin: 0 auto;
-  }
-
-  .admin-login-box {
-    padding: 20px;
+  .card-emblem-box img {
+    max-height: 58px;
   }
 }

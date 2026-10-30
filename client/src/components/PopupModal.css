@@ -1,0 +1,121 @@
+.gov-welcome-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3500;
+  padding: 20px;
+}
+
+.gov-welcome-box {
+  background-color: #ffffff;
+  border-radius: 8px;
+  max-width: 540px;
+  width: 100%;
+  padding: 28px;
+  position: relative;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border-top: 4px solid #0f3b6c;
+}
+
+.gov-welcome-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.gov-welcome-close:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.gov-welcome-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.gov-welcome-emblem {
+  font-size: 2rem;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.gov-welcome-header h3 {
+  font-size: 1.15rem;
+  color: #0f3b6c;
+  margin: 0 0 2px;
+}
+
+.gov-welcome-sub {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.gov-welcome-body p {
+  color: #334155;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.gov-welcome-greeting {
+  color: #0f3b6c !important;
+}
+
+.gov-welcome-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0;
+  background-color: #f8fafc;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.gov-welcome-chip {
+  font-size: 0.825rem;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.gov-welcome-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 16px;
+}
+
+@media (max-width: 500px) {
+  .gov-welcome-footer {
+    flex-direction: column;
+  }
+  .gov-welcome-footer button {
+    width: 100%;
+  }
+}

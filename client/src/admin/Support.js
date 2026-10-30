@@ -1,353 +1,521 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import './Support.css';
-import axios from 'axios';
+import React, { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import api, { getAssetUrl } from "../services/api";
+import "./Support.css";
 
 const Support = () => {
-    const [complaints, setComplaints] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [filter, setFilter] = useState('all');
-    const [selectedComplaint, setSelectedComplaint] = useState(null);
-    const [stats, setStats] = useState({
-        total: 0,
-        pending: 0,
-        read: 0,
-        replied: 0
+  const { admin, loginAdmin, logoutAdmin } = useAuth();
+  const [complaints, setComplaints] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("pending");
+  const [selectedComplaint, setSelectedComplaint] = useState(null);
+  const [replyText, setReplyText] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [updating, setUpdating] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [statusError, setStatusError] = useState("");
+  const [stats, setStats] = useState({ total: 0, pending: 0, read: 0, replied: 0 });
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 60);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const calculateStats = useCallback((data) => {
+    setStats({
+      total: data.length,
+      pending: data.filter((c) => c.status?.toLowerCase() === "pending").length,
+      read: data.filter((c) => c.status?.toLowerCase() === "read").length,
+      replied: data.filter(
+        (c) => c.status?.toLowerCase() === "replied" || c.status?.toLowerCase() === "resolved"
+      ).length,
     });
+  }, []);
 
-    // Calculate statistics
-    const calculateStats = useCallback((data) => {
-        const stats = {
-            total: data.length,
-            pending: data.filter(c => c.status === 'pending').length,
-            read: data.filter(c => c.status === 'read').length,
-            replied: data.filter(c => c.status === 'replied').length
-        };
-        setStats(stats);
-    }, []);
-
-    // Fetch all complaints
-    const fetchComplaints = useCallback(async () => {
-        try {
-            setLoading(true);
-            // CORRECT - just https://
-            const response = await axios.get('https://checkirpala.onrender.com/api/contacts');
-            if (response.data.success) {
-                setComplaints(response.data.data);
-                calculateStats(response.data.data);
-            }
-        } catch (error) {
-            console.error('Error fetching complaints:', error);
-        } finally {
-            setLoading(false);
+  const fetchComplaints = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await api.get("/api/contacts");
+      if (response.data && response.data.success) {
+        const data = response.data.data || [];
+        setComplaints(data);
+        calculateStats(data);
+        if (!selectedComplaint && data.length > 0) {
+          const firstPending = data.find((c) => c.status?.toLowerCase() === "pending") || data[0];
+          setSelectedComplaint(firstPending);
+          setReplyText(firstPending.adminReply || "");
         }
-    }, [calculateStats]);
+      }
+    } catch (error) {
+      console.error("Error fetching grievances:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [calculateStats, selectedComplaint]);
 
-    useEffect(() => {
-        fetchComplaints();
-    }, [fetchComplaints]);
+  useEffect(() => {
+    if (admin) fetchComplaints();
+  }, [admin, fetchComplaints]);
 
-    // Update complaint status
-    const updateStatus = async (id, newStatus) => {
-        try {
-            const response = await axios.put(`https://checkirpala.onrender.com/api/contact/${id}`, {
-                status: newStatus
-            });
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoginLoading(true);
+    setLoginError("");
+    try {
+      const res = await loginAdmin(email, password);
+      if (res.success) {
+        setEmail("");
+        setPassword("");
+      } else {
+        setLoginError(res.error || "Authentication failed. Please check credentials.");
+      }
+    } catch (err) {
+      setLoginError("Login verification failed. Please try again.");
+    } finally {
+      setLoginLoading(false);
+    }
+  };
 
-            if (response.data.success) {
-                const updatedComplaints = complaints.map(c =>
-                    c._id === id ? { ...c, status: newStatus } : c
-                );
-                setComplaints(updatedComplaints);
-                calculateStats(updatedComplaints);
+  const isLocked = (status) =>
+    status?.toLowerCase() === "resolved" || status?.toLowerCase() === "replied";
 
-                if (selectedComplaint && selectedComplaint._id === id) {
-                    setSelectedComplaint({ ...selectedComplaint, status: newStatus });
-                }
-            }
-        } catch (error) {
-            console.error('Error updating status:', error);
+  const updateStatus = async (id, newStatus) => {
+    // Block status change if already resolved
+    const current = complaints.find((c) => c._id === id);
+    if (current && isLocked(current.status)) {
+      setStatusError("This grievance is resolved and locked. Status cannot be changed.");
+      return;
+    }
+
+    try {
+      setUpdating(true);
+      setStatusError("");
+      const payload = { status: newStatus.toLowerCase() };
+      if (replyText.trim()) payload.adminReply = replyText.trim();
+
+      const response = await api.put(`/api/contact/${id}`, payload);
+      if (response.data && response.data.success) {
+        const updated = complaints.map((c) =>
+          c._id === id ? { ...c, status: newStatus.toLowerCase(), adminReply: replyText } : c
+        );
+        setComplaints(updated);
+        calculateStats(updated);
+        if (selectedComplaint && selectedComplaint._id === id) {
+          setSelectedComplaint({
+            ...selectedComplaint,
+            status: newStatus.toLowerCase(),
+            adminReply: replyText,
+          });
         }
+      }
+    } catch (error) {
+      console.error("Error updating grievance status:", error);
+      alert("Failed to update status: " + error.message);
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const getSubjectName = (subject) => {
+    const subjects = {
+      certificate: "Certificate Related",
+      scheme: "Scheme Related",
+      complaint: "Public Grievance",
+      water: "Water Supply & Tubewell",
+      road: "Road & Drainage Problem",
+      other: "General Issue",
     };
+    return subjects[subject] || subject;
+  };
 
-    // Generate Ticket ID
-    const generateTicketId = (complaint) => {
-        const date = new Date(complaint.createdAt);
-        const year = date.getFullYear().toString().slice(-2);
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const day = date.getDate().toString().padStart(2, '0');
-        const id = complaint._id.slice(-6).toUpperCase();
-        return `TKT-${year}${month}${day}-${id}`;
-    };
-
-    // Format date
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleString('en-IN', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true
-        });
-    };
-
-    // Get status badge class
-    const getStatusBadge = (status) => {
-        switch (status) {
-            case 'pending': return 'status-badge pending';
-            case 'read': return 'status-badge read';
-            case 'replied': return 'status-badge replied';
-            default: return 'status-badge';
-        }
-    };
-
-    // Get subject text
-    const getSubjectText = (subject) => {
-        const subjects = {
-            'certificate': 'Certificate Related',
-            'scheme': 'Scheme Related',
-            'complaint': 'Complaint',
-            'water': 'Water Supply Issue',
-            'road': 'Road Problem',
-            'other': 'Other'
-        };
-        return subjects[subject] || subject;
-    };
-
-    // Filter complaints
-    const filteredComplaints = filter === 'all'
-        ? complaints
-        : complaints.filter(c => c.status === filter);
-
+  /* ---------- LOGIN ---------- */
+  if (!admin) {
     return (
-        <div className="support-dashboard">
-            {/* Header */}
-            <div className="dashboard-header">
-                <h1>
-                    <i className="fas fa-headset"></i>
-                    Support Dashboard
-                </h1>
-                <button className="refresh-btn" onClick={fetchComplaints}>
-                    <i className="fas fa-sync-alt"></i> Refresh
-                </button>
+      <div className="support-login-page">
+        <div className="support-login-card">
+          <div className="support-login-header">
+            <span className="support-login-icon">📢</span>
+            <h2>Grievance Redressal Desk</h2>
+            <p>Irhpala Gram Panchayat • Public Issues Redressal Officer Login</p>
+          </div>
+
+          {loginError && (
+            <div className="gov-alert gov-alert-error" style={{ marginBottom: "16px" }}>
+              {loginError}
+            </div>
+          )}
+
+          <form onSubmit={handleLogin} className="gov-form">
+            <div className="gov-form-group">
+              <label>Official Email ID / Username *</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="support@panchayat.gov.in"
+                required
+              />
             </div>
 
-            {/* Statistics Cards */}
-            <div className="stats-cards">
-                <div className="stat-card total" onClick={() => setFilter('all')}>
-                    <div className="stat-icon">
-                        <i className="fas fa-ticket-alt"></i>
-                    </div>
-                    <div className="stat-content">
-                        <span className="stat-value">{stats.total}</span>
-                        <span className="stat-label">Total Tickets</span>
-                    </div>
-                </div>
-
-                <div className="stat-card pending" onClick={() => setFilter('pending')}>
-                    <div className="stat-icon">
-                        <i className="fas fa-clock"></i>
-                    </div>
-                    <div className="stat-content">
-                        <span className="stat-value">{stats.pending}</span>
-                        <span className="stat-label">Pending</span>
-                    </div>
-                </div>
-
-                <div className="stat-card read" onClick={() => setFilter('read')}>
-                    <div className="stat-icon">
-                        <i className="fas fa-eye"></i>
-                    </div>
-                    <div className="stat-content">
-                        <span className="stat-value">{stats.read}</span>
-                        <span className="stat-label">Read</span>
-                    </div>
-                </div>
-
-                <div className="stat-card replied" onClick={() => setFilter('replied')}>
-                    <div className="stat-icon">
-                        <i className="fas fa-check-circle"></i>
-                    </div>
-                    <div className="stat-content">
-                        <span className="stat-value">{stats.replied}</span>
-                        <span className="stat-label">Replied</span>
-                    </div>
-                </div>
+            <div className="gov-form-group">
+              <label>Administrative Password *</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter password"
+                required
+              />
             </div>
 
-            {/* Main Content */}
-            <div className="dashboard-content">
-                {/* Complaints List */}
-                <div className="complaints-list-section">
-                    <div className="list-header">
-                        <h2>
-                            {filter === 'all' ? 'All Tickets' : `${filter.charAt(0).toUpperCase() + filter.slice(1)} Tickets`}
-                        </h2>
-                        <span className="list-count">{filteredComplaints.length} items</span>
-                    </div>
+            <button
+              type="submit"
+              className="gov-btn gov-btn-primary support-login-btn"
+              disabled={loginLoading}
+            >
+              {loginLoading ? "Authenticating..." : "Access Grievance Desk →"}
+            </button>
+          </form>
 
-                    {loading ? (
-                        <div className="loading-spinner">
-                            <i className="fas fa-spinner fa-spin"></i> Loading...
-                        </div>
-                    ) : (
-                        <div className="complaints-list">
-                            {filteredComplaints.length === 0 ? (
-                                <div className="no-data">
-                                    <i className="fas fa-inbox"></i>
-                                    <p>No complaints found</p>
-                                </div>
-                            ) : (
-                                filteredComplaints.map(complaint => (
-                                    <div
-                                        key={complaint._id}
-                                        className={`complaint-item ${selectedComplaint?._id === complaint._id ? 'active' : ''}`}
-                                        onClick={() => setSelectedComplaint(complaint)}
-                                    >
-                                        <div className="complaint-header">
-                                            <span className="ticket-id">{generateTicketId(complaint)}</span>
-                                            <span className={getStatusBadge(complaint.status)}>
-                                                {complaint.status}
-                                            </span>
-                                        </div>
-                                        <div className="complaint-info">
-                                            <h4>{complaint.name}</h4>
-                                            <p className="complaint-subject">{getSubjectText(complaint.subject)}</p>
-                                            <div className="complaint-meta">
-                                                <span><i className="fas fa-phone"></i> {complaint.phone}</span>
-                                                <span><i className="fas fa-calendar"></i> {formatDate(complaint.createdAt).split(',')[0]}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))
-                            )}
-                        </div>
-                    )}
-                </div>
-
-                {/* Complaint Details */}
-                <div className="complaint-details-section">
-                    {selectedComplaint ? (
-                        <div className="complaint-details">
-                            <div className="details-header">
-                                <h3>Ticket Details</h3>
-                                <div className="header-actions">
-                                    <select
-                                        value={selectedComplaint.status}
-                                        onChange={(e) => updateStatus(selectedComplaint._id, e.target.value)}
-                                        className="status-select"
-                                    >
-                                        <option value="pending">Pending</option>
-                                        <option value="read">Mark as Read</option>
-                                        <option value="replied">Mark as Replied</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div className="ticket-info">
-                                <div className="info-row">
-                                    <span className="info-label">Ticket ID:</span>
-                                    <span className="info-value ticket-id-badge">{generateTicketId(selectedComplaint)}</span>
-                                </div>
-                                <div className="info-row">
-                                    <span className="info-label">Submitted on:</span>
-                                    <span className="info-value">{formatDate(selectedComplaint.createdAt)}</span>
-                                </div>
-                            </div>
-
-                            <div className="details-grid">
-                                <div className="detail-item">
-                                    <label>Name</label>
-                                    <p>{selectedComplaint.name}</p>
-                                </div>
-
-                                <div className="detail-item">
-                                    <label>Phone Number</label>
-                                    <p>
-                                        <a href={`tel:${selectedComplaint.phone}`}>
-                                            {selectedComplaint.phone}
-                                        </a>
-                                    </p>
-                                </div>
-
-                                {selectedComplaint.email && (
-                                    <div className="detail-item">
-                                        <label>Email</label>
-                                        <p>
-                                            <a href={`mailto:${selectedComplaint.email}`}>
-                                                {selectedComplaint.email}
-                                            </a>
-                                        </p>
-                                    </div>
-                                )}
-
-                                <div className="detail-item full-width">
-                                    <label>Subject</label>
-                                    <p className="subject-text">{getSubjectText(selectedComplaint.subject)}</p>
-                                </div>
-
-                                <div className="detail-item full-width">
-                                    <label>Message</label>
-                                    <p className="message-text">{selectedComplaint.message}</p>
-                                </div>
-
-                                {selectedComplaint.imageUrl && (
-                                    <div className="detail-item full-width">
-                                        <label>Attached Image</label>
-                                        <div className="image-preview">
-                                            <img
-                                                src={`http://https://checkirpala.onrender.com${selectedComplaint.imageUrl}`}
-                                                alt="Complaint attachment"
-                                                onClick={() => window.open(`http://https://checkirpala.onrender.com${selectedComplaint.imageUrl}`, '_blank')}
-                                            />
-                                            <a
-                                                href={`http://https://checkirpala.onrender.com${selectedComplaint.imageUrl}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="view-image-btn"
-                                            >
-                                                <i className="fas fa-external-link-alt"></i> View Full Image
-                                            </a>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Action Buttons */}
-                            <div className="action-buttons">
-                                <button
-                                    className="action-btn whatsapp"
-                                    onClick={() => window.open(`https://wa.me/91${selectedComplaint.phone}?text=Regarding your complaint: ${generateTicketId(selectedComplaint)}`, '_blank')}
-                                >
-                                    <i className="fab fa-whatsapp"></i> WhatsApp
-                                </button>
-                                <button
-                                    className="action-btn call"
-                                    onClick={() => window.location.href = `tel:${selectedComplaint.phone}`}
-                                >
-                                    <i className="fas fa-phone"></i> Call
-                                </button>
-                                {selectedComplaint.email && (
-                                    <button
-                                        className="action-btn email"
-                                        onClick={() => window.location.href = `mailto:${selectedComplaint.email}`}
-                                    >
-                                        <i className="fas fa-envelope"></i> Email
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="no-selection">
-                            <i className="fas fa-arrow-left"></i>
-                            <p>Select a complaint to view details</p>
-                        </div>
-                    )}
-                </div>
-            </div>
+          <div style={{ marginTop: "20px", textAlign: "center" }}>
+            <Link to="/admin" style={{ color: "#0f3b6c", fontSize: "0.85rem" }}>
+              ← Return to Department Selection Hub
+            </Link>
+          </div>
         </div>
+      </div>
     );
+  }
+
+  /* ---------- ROLE CHECK ---------- */
+  if (admin.role !== "support" && admin.role !== "admin" && admin.role !== "bdo") {
+    return (
+      <div className="support-restriction-page">
+        <div className="support-restriction-card">
+          <div style={{ fontSize: "2.5rem", marginBottom: "12px" }}>🛡️</div>
+          <h2>Authorized Department Restriction</h2>
+          <p>
+            You are signed in as <strong>{admin.name}</strong> ({admin.designation || admin.role?.toUpperCase()}).
+            This console is restricted to the <strong>Public Grievance Redressal Officer</strong>.
+          </p>
+          <div style={{ display: "flex", gap: "12px", justifyContent: "center", marginTop: "16px" }}>
+            <button className="gov-btn gov-btn-outline" onClick={logoutAdmin}>Sign Out</button>
+            <Link to="/admin" className="gov-btn gov-btn-primary">Go to Department Hub →</Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const filteredComplaints = complaints.filter((c) => {
+    const matchesFilter = filter === "all" || c.status?.toLowerCase() === filter.toLowerCase();
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return matchesFilter;
+    return (
+      matchesFilter &&
+      (c.name?.toLowerCase().includes(q) ||
+        c.phone?.includes(q) ||
+        c.email?.toLowerCase().includes(q) ||
+        c.ticketNumber?.toLowerCase().includes(q) ||
+        c.subject?.toLowerCase().includes(q))
+    );
+  });
+
+  const selectedLocked = selectedComplaint && isLocked(selectedComplaint.status);
+  const phoneClean = selectedComplaint?.phone?.replace(/[^0-9]/g, "") || "";
+
+  /* ---------- DASHBOARD ---------- */
+  return (
+    <div className="support-dashboard">
+      <header className="support-nav">
+        <div className="support-nav-left">
+          <span className="support-nav-icon">📢</span>
+          <div>
+            <h1>Grievance Redressal Officer Desk</h1>
+            <p>Irhpala Gram Panchayat • Public Issues & Feedback Redressal System</p>
+          </div>
+        </div>
+
+        <div className="support-nav-right">
+          <div className="support-officer-badge">
+            <strong>{admin.name}</strong>
+            <small>{admin.designation || "Grievance Officer"}</small>
+          </div>
+          <button className="gov-btn support-refresh-btn" onClick={fetchComplaints}>
+            🔄 Refresh
+          </button>
+          <button
+            className={`gov-btn support-logout-btn ${scrolled ? "scrolled" : ""}`}
+            onClick={() => setShowLogoutModal(true)}
+          >
+            Logout
+          </button>
+        </div>
+      </header>
+
+      {/* Stats chips — permanent colours */}
+      <div className="support-stats-bar">
+        <div className={`support-stat-chip total ${filter === "all" ? "active" : ""}`} onClick={() => setFilter("all")}>
+          <span>Total Grievances</span>
+          <strong>{stats.total}</strong>
+        </div>
+        <div className={`support-stat-chip pending ${filter === "pending" ? "active" : ""}`} onClick={() => setFilter("pending")}>
+          <span>Awaiting Review</span>
+          <strong>{stats.pending}</strong>
+        </div>
+        <div className={`support-stat-chip read ${filter === "read" ? "active" : ""}`} onClick={() => setFilter("read")}>
+          <span>Under Investigation</span>
+          <strong>{stats.read}</strong>
+        </div>
+        <div className={`support-stat-chip replied ${filter === "replied" ? "active" : ""}`} onClick={() => setFilter("replied")}>
+          <span>Resolved / Replied</span>
+          <strong>{stats.replied}</strong>
+        </div>
+      </div>
+
+      {/* Short search box */}
+      <div className="support-search-bar">
+        <input
+          type="text"
+          placeholder="🔍 Search grievances..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
+
+      <div className="support-main-grid">
+        {/* Inbox */}
+        <div className="complaints-list-panel">
+          <div className="panel-title">
+            <span>Inbox</span>
+            <span className="panel-count">{filteredComplaints.length}</span>
+          </div>
+
+          {loading ? (
+            <div className="support-loading">
+              <div className="gov-spinner"></div>
+              <p>Loading grievance stream...</p>
+            </div>
+          ) : (
+            <div className="complaint-items-wrapper">
+              {filteredComplaints.length > 0 ? (
+                filteredComplaints.map((c) => (
+                  <div
+                    key={c._id}
+                    className={`complaint-list-item ${selectedComplaint?._id === c._id ? "selected" : ""}`}
+                    onClick={() => {
+                      setSelectedComplaint(c);
+                      setReplyText(c.adminReply || "");
+                      setStatusError("");
+                    }}
+                  >
+                    <div className="item-header">
+                      <strong>{c.name}</strong>
+                      <span className={`support-status-badge ${c.status?.toLowerCase()}`}>
+                        {c.status}
+                      </span>
+                    </div>
+                    <div className="item-subject">
+                      {c.ticketNumber && <span className="ticket-tag">[{c.ticketNumber}]</span>}
+                      {getSubjectName(c.subject)}
+                    </div>
+                    <p className="item-preview">
+                      {c.message?.substring(0, 75)}{c.message?.length > 75 ? "..." : ""}
+                    </p>
+                    <div className="item-footer">
+                      <small>📞 {c.phone}</small>
+                      <small>{new Date(c.submittedAt || c.createdAt).toLocaleDateString("en-IN")}</small>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="support-empty">
+                  <span>📭</span>
+                  <p>No grievances found matching criteria.</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Detail */}
+        <div className="complaint-detail-panel">
+          {selectedComplaint ? (
+            <div className="complaint-detail-content">
+              <div className="detail-header">
+                <div>
+                  <h2>{getSubjectName(selectedComplaint.subject)}</h2>
+                  <div className="detail-ticket-row">
+                    <span className="ticket-tag">
+                      Ticket: {selectedComplaint.ticketNumber || selectedComplaint._id}
+                    </span>
+                    <span className={`support-status-badge ${selectedComplaint.status?.toLowerCase()}`}>
+                      {selectedComplaint.status}
+                    </span>
+                  </div>
+                </div>
+                <div className="detail-meta">
+                  📅 {new Date(selectedComplaint.submittedAt || selectedComplaint.createdAt).toLocaleDateString("en-IN")}
+                </div>
+              </div>
+
+              {/* Citizen info + direct contact buttons */}
+              <div className="citizen-info-box">
+                <div><strong>Citizen Name:</strong> {selectedComplaint.name}</div>
+                <div><strong>Mobile:</strong> 📞 {selectedComplaint.phone}</div>
+                {selectedComplaint.email && (
+                  <div><strong>Email:</strong> ✉️ {selectedComplaint.email}</div>
+                )}
+
+                <div className="citizen-contact-actions">
+                  <a
+                    href={`tel:${phoneClean}`}
+                    className="contact-btn call-btn"
+                    title="Call citizen"
+                  >
+                    📞 Call
+                  </a>
+                  <a
+                    href={`https://wa.me/91${phoneClean}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="contact-btn wa-btn"
+                    title="WhatsApp citizen"
+                  >
+                    💬 WhatsApp
+                  </a>
+                  {selectedComplaint.email && (
+                    <a
+                      href={`mailto:${selectedComplaint.email}?subject=Grievance ${selectedComplaint.ticketNumber || ""}`}
+                      className="contact-btn mail-btn"
+                      title="Email citizen"
+                    >
+                      ✉️ Email
+                    </a>
+                  )}
+                </div>
+              </div>
+
+              <div className="detail-message-box">
+                <h4>Citizen Grievance Description:</h4>
+                <p>{selectedComplaint.message}</p>
+              </div>
+
+              {selectedComplaint.image && (
+                <div className="detail-attachment">
+                  <h4>Uploaded Evidence / Photo:</h4>
+                  <a href={getAssetUrl(selectedComplaint.image)} target="_blank" rel="noopener noreferrer">
+                    <img
+                      src={getAssetUrl(selectedComplaint.image)}
+                      alt="Grievance evidence"
+                      className="complaint-img-preview"
+                    />
+                  </a>
+                </div>
+              )}
+
+              <div className="reply-section">
+                <h4>Official Redressal Response & Action</h4>
+
+                {statusError && (
+                  <div className="gov-alert gov-alert-error" style={{ marginBottom: "12px" }}>
+                    {statusError}
+                  </div>
+                )}
+
+                {selectedLocked ? (
+                  <div className="locked-notice">
+                    🔒 This grievance is <strong>{selectedComplaint.status}</strong>. Status cannot be changed further.
+                  </div>
+                ) : (
+                  <div className="status-action-btns">
+                    <button
+                      className={`status-btn ${selectedComplaint.status === "pending" ? "current" : ""}`}
+                      onClick={() => updateStatus(selectedComplaint._id, "pending")}
+                      disabled={updating}
+                    >
+                      Mark Pending
+                    </button>
+                    <button
+                      className={`status-btn ${selectedComplaint.status === "read" ? "current" : ""}`}
+                      onClick={() => updateStatus(selectedComplaint._id, "read")}
+                      disabled={updating}
+                    >
+                      Mark In Review
+                    </button>
+                    <button
+                      className={`status-btn resolve ${selectedComplaint.status === "resolved" ? "current" : ""}`}
+                      onClick={() => updateStatus(selectedComplaint._id, "resolved")}
+                      disabled={updating}
+                    >
+                      ✓ Mark Resolved (Permanent)
+                    </button>
+                  </div>
+                )}
+
+                <div className="reply-box">
+                  <label>Official Response (Saved in database for citizen record):</label>
+                  <textarea
+                    rows="4"
+                    value={replyText}
+                    onChange={(e) => setReplyText(e.target.value)}
+                    placeholder="Enter official redressal response or steps taken..."
+                    disabled={selectedLocked}
+                  />
+                  <div className="reply-actions">
+                    <button
+                      className="gov-btn gov-btn-secondary"
+                      onClick={() => updateStatus(selectedComplaint._id, selectedComplaint.status || "resolved")}
+                      disabled={updating || selectedLocked}
+                    >
+                      {updating ? "Saving..." : "Save Response & Redressal"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="support-select-prompt">
+              <span>📋</span>
+              <h3>Select a grievance from the inbox</h3>
+              <p>Choose an item on the left to inspect details, review citizen evidence, and submit redressal.</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {showLogoutModal && (
+        <div className="support-popup-overlay">
+          <div className="support-popup">
+            <h3>Exit Grievance Desk</h3>
+            <p>Do you want to sign out from the Grievance Redressal console?</p>
+            <div className="support-popup-btns">
+              <button
+                className="support-popup-yes"
+                onClick={() => {
+                  logoutAdmin();
+                  setShowLogoutModal(false);
+                }}
+              >
+                Sign Out
+              </button>
+              <button className="support-popup-no" onClick={() => setShowLogoutModal(false)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default Support;

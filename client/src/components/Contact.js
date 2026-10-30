@@ -1,284 +1,273 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../services/api";
 import "./Contact.css";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: '',
-    image: null
+    name: "",
+    email: "",
+    phone: "",
+    subject: "complaint",
+    message: "",
+    image: null,
   });
 
   const [loading, setLoading] = useState(false);
-  const [responseMsg, setResponseMsg] = useState('');
+  const [responseMsg, setResponseMsg] = useState("");
   const [showPopup, setShowPopup] = useState(false);
-  const [ticketId, setTicketId] = useState('');
+  const [ticketId, setTicketId] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleFileChange = (e) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      image: e.target.files[0]
+      image: e.target.files[0],
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append('name', formData.name);
-      formDataToSend.append('email', formData.email);
-      formDataToSend.append('phone', formData.phone);
-      formDataToSend.append('subject', formData.subject);
-      formDataToSend.append('message', formData.message);
+      formDataToSend.append("name", formData.name);
+      formDataToSend.append("email", formData.email);
+      formDataToSend.append("phone", formData.phone);
+      formDataToSend.append("subject", formData.subject);
+      formDataToSend.append("message", formData.message);
       if (formData.image) {
-        formDataToSend.append('image', formData.image);
+        formDataToSend.append("image", formData.image);
       }
 
-      const response = await axios.post('https://checkirpala.onrender.com/api/contact', 
-        formDataToSend,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-      );
+      const response = await api.post("/api/contact", formDataToSend, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       if (response.data.success) {
-        setTicketId(response.data.data._id.slice(-6).toUpperCase());
+        const receivedTicket =
+          response.data.ticketNumber ||
+          response.data.data?.ticketNumber ||
+          response.data.data?._id?.slice(-6).toUpperCase();
+        setTicketId(receivedTicket);
         setShowPopup(true);
-        setResponseMsg('Message sent successfully! ✅');
+        setResponseMsg("আপনার অভিযোগ সফলভাবে গৃহীত হয়েছে! ✅");
         setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          subject: '',
-          message: '',
-          image: null
+          name: "",
+          email: "",
+          phone: "",
+          subject: "complaint",
+          message: "",
+          image: null,
         });
-        document.getElementById('imageUpload').value = '';
+        const fileInput = document.getElementById("imageUpload");
+        if (fileInput) fileInput.value = "";
       }
     } catch (error) {
-      setResponseMsg('Failed to send message ❌');
+      setResponseMsg("দাখিল করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন। ❌");
     } finally {
       setLoading(false);
-      setTimeout(() => setResponseMsg(''), 3000);
+      setTimeout(() => setResponseMsg(""), 5000);
     }
   };
-  
+
   return (
-    <div className="contact-section" id="contact">
-      <div className="contact-container">
+    <div className="gov-contact-section" id="contact">
+      <div className="gov-contact-container">
         {/* Header */}
-        <div className="contact-header">
-          <h2>
-            <span className="header-icon">📞</span>
-            Contact Us
-            <span className="header-icon">🌾</span>
-          </h2>
-          <p className="header-subtitle">We're here to help - आपकी सेवा में हम हैं</p>
+        <div className="gov-section-header">
+          <div className="gov-section-badge">
+            <span>📞 নাগরিক অভিযোগ ও যোগাযোগ সেল • Grievance Redressal</span>
+          </div>
+          <h2>জনঅভিযোগ ও সহায়তা পোর্টাল</h2>
+          <p className="gov-section-subtitle">
+            গ্রাম পঞ্চায়েতের যে কোনো সমস্যা বা পরিষেবা সংক্রান্ত অনুসন্ধান জানান। প্রতিটি অভিযোগের একটি ট্র্যাকিং টিকিট নম্বর প্রদান করা হবে।
+          </p>
         </div>
 
-        <div className="contact-wrapper">
-          {/* Left Side - Contact Info & Social */}
-          <div className="contact-info-side">
-            {/* Contact Info */}
-            <div className="info-section">
-              <h4><span className="section-icon">📇</span> Contact Information</h4>
-              <div className="info-details">
-                <p className="info-item">
-                  <span className="info-icon">📍</span>
-                  <span>Gram Panchayat Office, Village Road, District - 713212</span>
-                </p>
-                <p className="info-item">
-                  <span className="info-icon">📞</span>
-                  <span>Helpline: <strong>1800-XXX-XXXX</strong> (Toll Free)</span>
-                </p>
-                <p className="info-item">
-                  <span className="info-icon">✉️</span>
-                  <span>Email: <strong>panchayat@gram.gov.in</strong></span>
-                </p>
-                <p className="info-item">
-                  <span className="info-icon">⏰</span>
-                  <span>Office Hours: <strong>10 AM - 5 PM</strong> (Monday - Saturday)</span>
-                </p>
+        <div className="gov-contact-layout">
+          {/* Left Side: Official Contact Info */}
+          <div className="gov-contact-info-card">
+            <h3>📇 যোগাযোগের ঠিকানা ও সময়সূচী</h3>
+
+            <div className="gov-info-list">
+              <div className="gov-info-row">
+                <span className="gov-row-icon">🏛️</span>
+                <div>
+                  <strong>অফিসের ঠিকানা:</strong>
+                  <p>ইরপালা গ্রাম পঞ্চায়েত কার্যালয়, ঘাটাল, পশ্চিম মেদিনীপুর, পিন - ৭২১২১২</p>
+                </div>
+              </div>
+
+              <div className="gov-info-row">
+                <span className="gov-row-icon">📞</span>
+                <div>
+                  <strong>টোল-ফ্রি হেল্পলাইন:</strong>
+                  <p>03225-244100 / 1800-345-0111 (সোম - শুক্র)</p>
+                </div>
+              </div>
+
+              <div className="gov-info-row">
+                <span className="gov-row-icon">✉️</span>
+                <div>
+                  <strong>অফিসিয়াল ইমেল:</strong>
+                  <p>irhpala.gp@wb.gov.in / helpdesk@panchayat.gov.in</p>
+                </div>
+              </div>
+
+              <div className="gov-info-row">
+                <span className="gov-row-icon">⏰</span>
+                <div>
+                  <strong>জনগণ দর্শনের সময়:</strong>
+                  <p>সকাল ১০:০০ টা হইতে বিকাল ৫:০০ টা (সরকারি ছুটির দিন ব্যতীত)</p>
+                </div>
               </div>
             </div>
 
-            {/* Social Links */}
-            <div className="social-section">
-              <h4><span className="section-icon">🤝</span> Connect With Us</h4>
-              <div className="social-icons">
-                <a href="/" className="social-btn facebook" aria-label="Facebook">
-                  <i className="fab fa-facebook-f">f</i>
-                </a>
-                <a href="/" className="social-btn twitter" aria-label="Twitter">
-                  <i className="fab fa-twitter">𝕏</i>
-                </a>
-                <a href="/" className="social-btn youtube" aria-label="YouTube">
-                  <i className="fab fa-youtube">▶</i>
-                </a>
-                <a href="/" className="social-btn whatsapp" aria-label="WhatsApp">
-                  <i className="fab fa-whatsapp">📱</i>
-                </a>
-                <a href="/" className="social-btn instagram" aria-label="Instagram">
-                  <i className="fab fa-instagram">📷</i>
-                </a>
-              </div>
-            </div>
-
-            {/* Digital India */}
-            <div className="digital-india-section">
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Digital_India_Logo.svg/2560px-Digital_India_Logo.svg.png" 
-                alt="Digital India" 
-                className="digital-logo"
-              />
-              <span>Powered by Digital India Initiative</span>
+            <div className="gov-contact-assurance">
+              <h4>🛡️ স্বচ্ছতার নিশ্চয়তা</h4>
+              <p>
+                আমাদের পঞ্চায়েতে প্রতিটি অভিযোগ সরাসরি সচিব ও প্রধানের নজরে যায় এবং সরকারি নিয়ম অনুসারে দ্রুত সমাধানের ব্যবস্থা নেওয়া হয়।
+              </p>
             </div>
           </div>
 
-          {/* Right Side - Contact Form */}
-          <div className="contact-form-side">
-            <div className="form-section">
-              <h4><span className="section-icon">📝</span> Send us a Message</h4>
-              
-              {responseMsg && (
-                <div className={`response-msg ${responseMsg.includes('✅') ? 'success' : 'error'}`}>
-                  {responseMsg}
-                </div>
-              )}
+          {/* Right Side: Grievance Submission Form */}
+          <div className="gov-contact-form-card">
+            <h3>📝 নতুন অভিযোগ / অনুসন্ধান দাখিল করুন</h3>
 
-              <form className="contact-form" onSubmit={handleSubmit}>
-                {/* Name - Mandatory */}
-                <div className="form-group">
-                  <input 
-                    type="text" 
+            {responseMsg && (
+              <div
+                className={`gov-alert ${
+                  responseMsg.includes("✅") ? "gov-alert-success" : "gov-alert-error"
+                }`}
+              >
+                {responseMsg}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="gov-form">
+              <div className="gov-form-grid">
+                <div className="gov-form-group">
+                  <label>আপনার সম্পূর্ণ নাম (Applicant Name) *</label>
+                  <input
+                    type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    placeholder="Your Name *" 
-                    required 
+                    placeholder="উদাঃ অশোক কুমার দাস"
+                    required
                   />
                 </div>
 
-                {/* Email - Optional */}
-                <div className="form-group">
-                  <input 
-                    type="email" 
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="Your Email (Optional)" 
-                  />
-                </div>
-
-                {/* Phone - Mandatory */}
-                <div className="form-group">
-                  <input 
-                    type="tel" 
+                <div className="gov-form-group">
+                  <label>মোবাইল নম্বর (Phone Number) *</label>
+                  <input
+                    type="tel"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    placeholder="Phone Number *" 
-                    required 
+                    placeholder="১০ সংখ্যার মোবাইল নম্বর"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="gov-form-grid">
+                <div className="gov-form-group">
+                  <label>ইমেল ঠিকানা (Email - Optional)</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="example@gmail.com"
                   />
                 </div>
 
-                {/* Subject - Mandatory */}
-                <div className="form-group">
-                  <select 
+                <div className="gov-form-group">
+                  <label>বিষয় / বিভাগের ধরণ (Subject Category) *</label>
+                  <select
                     name="subject"
                     value={formData.subject}
                     onChange={handleChange}
                     required
                   >
-                    <option value="" disabled>Select Subject *</option>
-                    <option value="certificate">Certificate Related</option>
-                    <option value="scheme">Scheme Related</option>
-                    <option value="complaint">Complaint</option>
-                    <option value="water">Water Supply Issue</option>
-                    <option value="road">Road Problem</option>
-                    <option value="other">Other</option>
+                    <option value="complaint">সাধারণ অভিযোগ (Public Grievance)</option>
+                    <option value="water">পানীয় জল ও নলকূপ (Drinking Water Issue)</option>
+                    <option value="road">রাস্তাঘাট ও নিকাশী (Road / Drainage Problem)</option>
+                    <option value="certificate">সনদপত্র সংক্রান্ত (Certificate Query)</option>
+                    <option value="scheme">সরকারি যোজনা ও স্কিম (Scheme Information)</option>
+                    <option value="other">অন্যান্য (Other Issues)</option>
                   </select>
                 </div>
+              </div>
 
-                {/* Message - Mandatory */}
-                <div className="form-group">
-                  <textarea 
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    placeholder="Your Message *" 
-                    rows="4" 
-                    required
-                  ></textarea>
-                </div>
+              <div className="gov-form-group">
+                <label>অভিযোগের বিস্তারিত বিবরণ (Detailed Message) *</label>
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  rows="4"
+                  placeholder="আপনার সমস্যা বা প্রশ্নের বিস্তারিত বিবরণ লিখুন..."
+                  required
+                ></textarea>
+              </div>
 
-                {/* Image Upload - Optional */}
-                <div className="form-group upload-group">
-                  <label htmlFor="imageUpload" className="upload-label">
-                    <span className="upload-icon">📎</span>
-                    Attach Image (Optional - JPG, PNG)
-                  </label>
-                  <input 
-                    type="file" 
-                    id="imageUpload"
-                    name="image"
-                    onChange={handleFileChange}
-                    accept="image/jpeg, image/png, image/jpg"
-                    className="upload-input"
-                  />
-                  <small className="upload-hint">Max size: 5MB. You can upload photo of problem/document</small>
-                </div>
+              <div className="gov-form-group">
+                <label>ছবি বা নথির সংযুক্তি (Optional Attachment - Photo/Document)</label>
+                <input
+                  type="file"
+                  id="imageUpload"
+                  name="image"
+                  onChange={handleFileChange}
+                  accept="image/jpeg, image/png, image/jpg, application/pdf"
+                />
+                <small className="gov-input-hint">সর্বোচ্চ ফাইলের আকার: 5MB (JPG, PNG, PDF)</small>
+              </div>
 
-                <button type="submit" className="submit-btn" disabled={loading}>
-                  {loading ? 'Sending...' : 'Send Message'} 
-                  <span className="btn-icon">→</span>
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer Bottom */}
-        <div className="contact-footer">
-          <div className="footer-bottom">
-            <p className="copyright">
-              © 2024 Gram Panchayat Portal. All rights reserved. | 
-              <a href="/">Terms of Service</a> | 
-              <a href="/">Accessibility</a> | 
-              <a href="/">Sitemap</a>
-            </p>
-            <p className="developed-by">
-              Developed with <span className="heart">❤️</span> for Rural India
-            </p>
+              <button
+                type="submit"
+                className="gov-btn gov-btn-primary gov-submit-btn"
+                disabled={loading}
+              >
+                {loading ? "জমা দেওয়া হচ্ছে..." : "অভিযোগ জমা দিন / Submit Grievance"} →
+              </button>
+            </form>
           </div>
         </div>
       </div>
 
-      {/* Success Popup */}
+      {/* Success Modal */}
       {showPopup && (
-        <div className="popup-overlay">
-          <div className="popup-content">
-            <div className="popup-icon">✅</div>
-            <h3>Thank You!</h3>
-            <p>Your issue has been registered successfully.</p>
-            <p className="popup-id">Ticket ID: /{ticketId}</p>
-            <p className="popup-msg">We will contact you soon.</p>
-            <button className="popup-btn" onClick={() => setShowPopup(false)}>OK</button>
+        <div className="gov-modal-overlay">
+          <div className="gov-modal-card">
+            <div className="gov-modal-icon">✅</div>
+            <h3>অভিযোগ সফলভাবে নিবন্ধিত হয়েছে!</h3>
+            <p className="gov-modal-sub">
+              আপনার অভিযোগের বিবরণ ইরপালা গ্রাম পঞ্চায়েত সহায়তা সেলে পৌঁছে গেছে।
+            </p>
+            <div className="gov-ticket-box">
+              <span>ট্র্যাকিং টিকিট নম্বর:</span>
+              <strong>{ticketId}</strong>
+            </div>
+            <p className="gov-modal-hint">
+              ভবিষ্যতে অনুসন্ধানের জন্য এই টিকিট নম্বরটি সংরক্ষণ করে রাখুন।
+            </p>
+            <button
+              className="gov-btn gov-btn-primary"
+              onClick={() => setShowPopup(false)}
+            >
+              ঠিক আছে / OK
+            </button>
           </div>
         </div>
       )}

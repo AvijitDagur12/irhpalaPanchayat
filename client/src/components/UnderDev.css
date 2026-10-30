@@ -1,0 +1,101 @@
+.gov-advisory-wrapper {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background-color: #f8fafc;
+}
+
+.gov-advisory-card {
+  max-width: 600px;
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  border-top: 4px solid #0f3b6c;
+}
+
+.gov-advisory-header {
+  background-color: #f8fafc;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: center;
+}
+
+.gov-advisory-emblem {
+  font-size: 2.2rem;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.gov-advisory-header h2 {
+  font-size: 1.25rem;
+  color: #0f3b6c;
+  margin: 0 0 2px;
+}
+
+.gov-advisory-sub {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.gov-advisory-body {
+  padding: 32px 28px;
+  text-align: center;
+}
+
+.gov-advisory-icon-wrap {
+  width: 64px;
+  height: 64px;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.advisory-icon {
+  font-size: 2rem;
+}
+
+.gov-advisory-body h3 {
+  font-size: 1.2rem;
+  color: #0f3b6c;
+  margin-bottom: 14px;
+}
+
+.advisory-bengali {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  color: #334155;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.advisory-english {
+  color: #64748b;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 28px;
+}
+
+.gov-advisory-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gov-advisory-footer {
+  background-color: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  padding: 12px 20px;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.75rem;
+}

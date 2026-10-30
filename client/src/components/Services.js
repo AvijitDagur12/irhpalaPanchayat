@@ -1,166 +1,122 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./Services.css";
 
 const Services = () => {
-  // Services with multiple images each (6 images per service)
+  const navigate = useNavigate();
+
   const servicesData = [
     {
       id: 1,
-      title: "সনদপত্র",
-      titleEn: "Certificates",
-      icon: "📄",
-      description: "জন্ম, মৃত্যু, জাতি, আবাস - সব সনদ অনলাইনে",
-      images: [
-        "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1554224154-26032dfc0d6a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1585435557343-3b092031a831?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1554224155-26032dfc0d6a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-      ]
+      title: "ডিজিটাল সনদপত্র ও প্রশংসাপত্র",
+      titleEn: "Online Certificates & Verification",
+      icon: "📜",
+      description: "আয় সনদপত্র, স্থায়ী বাসিন্দার সার্টিফিকেট, চারিত্রিক সনদপত্র এবং পারিবারিক বিবরণী অনলাইনে আবেদন ও ডাউনলোড।",
+      tags: ["Income Cert", "Residential", "Character", "Direct PDF"],
+      actionText: "আবেদন করুন / Apply",
+      actionLink: "/certificate-application",
     },
     {
       id: 2,
-      title: "জল সরবরাহ",
-      titleEn: "Water Supply",
-      icon: "💧",
-      description: "নতুন সংযোগ, নলকূপ মেরামত, পানীয় জল",
-      images: [
-        "https://images.unsplash.com/photo-1581244277943-fe4a9c777189?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1538300342682-cf57afb97285?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1544928147-79a2dbc1f389?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1578469645745-b3a33a6b81a4?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1518623380800-1bdd9b7021c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-      ]
+      title: "জনঅভিযোগ নিষ্পত্তি ও সহায়তা সেল",
+      titleEn: "Public Grievance Redressal",
+      icon: "📢",
+      description: "পানীয় জল, নিকাশী নালা, রাস্তাঘাট বা গ্রাম পঞ্চায়েতের যে কোনো সমস্যা ছবি সহ সরাসরি অনলাইনে অভিযোগ দাখিল করুন।",
+      tags: ["Online Complaint", "Photo Upload", "Tracking ID", "Quick Resolution"],
+      actionText: "অভিযোগ জানান / File Issue",
+      actionLink: "/contact",
     },
     {
       id: 3,
-      title: "রাস্তাঘাট",
-      titleEn: "Roads",
-      icon: "🛣️",
-      description: "পাকা রাস্তা, ড্রেনেজ, মেরামতের কাজ",
-      images: [
-        "https://images.unsplash.com/photo-1577717903315-1691ae25abf8?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1597176116047-876a32798fcc?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1535382651921-5e77ea4458f2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1605001011156-cbf0b0f67a51?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1566228015668-4c45dbc4e2f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-      ]
+      title: "পানীয় জল সরবরাহ ও স্যানিটেশন",
+      titleEn: "Drinking Water & Sanitation",
+      icon: "💧",
+      description: "মিশন নির্মল বাংলা ও জল জীবন মিশন অধীনে নলকূপ মেরামত, পাইপলাইনের নতুন সংযোগ এবং পরিচ্ছন্নতা কার্যক্রম।",
+      tags: ["Tubewell Repair", "Pipeline Connection", "Water Quality"],
+      actionText: "সহায়তা চান / Support",
+      actionLink: "/contact",
     },
     {
       id: 4,
-      title: "বৃক্ষরোপণ",
-      titleEn: "Tree Plantation",
-      icon: "🌳",
-      description: "চারা বিতরণ, সবুজায়ন, পরিবেশ সুরক্ষা",
-      images: [
-        "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1592150621744-32164f73334c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1588392382834-a891154bca4d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1592150621744-32164f73334c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-      ]
+      title: "গ্রামীণ রাস্তাঘাট ও ড্রেনেজ পরিকাঠামো",
+      titleEn: "Rural Roads & Infrastructure",
+      icon: "🛣️",
+      description: "পথশ্রী-রাস্তাশ্রী প্রকল্প ও পঞ্চায়েত তহবিলের মাধ্যমে পাকা ঢালাই রাস্তা, কালভার্ট ও নিকাশী ড্রেন নির্মাণ ও রক্ষণাবেক্ষণ।",
+      tags: ["Concrete Road", "Drainage", "Solar Lights", "Maintenance"],
+      actionText: "পরিকাঠামো প্রস্তাব / Request",
+      actionLink: "/contact",
     },
     {
       id: 5,
-      title: "কৃষি সহায়তা",
-      titleEn: "Farming Support",
+      title: "সামাজিক সুরক্ষা ও পেনশন যোজনা",
+      titleEn: "Social Welfare & Pensions",
+      icon: "🤝",
+      description: "বার্ধক্য ভাতা, বিধবা ভাতা, মানবিক পেনশন, লক্ষ্মীর ভান্ডার ও স্বাস্থ্যসাথী কার্ড সংক্রান্ত তথ্য ও ফর্ম প্রদান।",
+      tags: ["Old Age Pension", "Lakshmir Bhandar", "Swasthya Sathi"],
+      actionText: "তথ্য জানুন / Inquire",
+      actionLink: "/contact",
+    },
+    {
+      id: 6,
+      title: "কৃষি ও কৃষক কল্যাণ সহায়তা",
+      titleEn: "Agriculture & Farmer Support",
       icon: "🌾",
-      description: "বীজ, সার, ফসল সুরক্ষা, সেচ ব্যবস্থা",
-      images: [
-        "https://images.unsplash.com/photo-1598515214211-89d3c73ae83a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1595278069441-2cf29faec5d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1464226184884-fa280b87c399?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-      ]
-    }
+      description: "কৃষক বন্ধু সহায়তা, শস্য বীমা, সরকারি বীজ ও সার বণ্টন কর্মসূচি এবং সেচ সংক্রান্ত পরামর্শ ও কৃষক প্রশিক্ষণ।",
+      tags: ["Krishak Bandhu", "Crop Insurance", "Subsidized Seeds"],
+      actionText: "তথ্য জানুন / Inquire",
+      actionLink: "/contact",
+    },
   ];
 
   return (
-    <div className="village-services" id="services">
-      {/* Decorative Elements */}
-      <div className="services-sky"></div>
-      <div className="services-deco services-deco--left"></div>
-      <div className="services-deco services-deco--right"></div>
-
-      <div className="services-container">
+    <section className="gov-services-section" id="services">
+      <div className="gov-services-container">
         {/* Header */}
-        <header className="services-head">
-          <h2>ডিজিটাল পদ্ধতিতে সহজ সুবিধা — গ্রামবাসীর হাতে স্বচ্ছ ও দ্রুত পঞ্চায়েত প্রশাসন</h2>
-          <p className="services-sub">Empowering rural communities through digital governance</p>
-        </header>
-
-        {/* Services with Images - Flexbox layout */}
-        {servicesData.map((service) => (
-          <div key={service.id} className="service-block">
-            <div className="service-title">
-              <span className="service-icon-large">{service.icon}</span>
-              <h3>{service.title} <span className="title-en">({service.titleEn})</span></h3>
-              <p className="service-desc">{service.description}</p>
-            </div>
-
-            {/* Image Gallery - Flexbox with left to right auto wrap */}
-            <div className="service-gallery">
-              {service.images.map((img, idx) => (
-                <figure key={idx} className="service-tile">
-                  <img src={img} alt={`${service.titleEn} ${idx + 1}`} loading="lazy" />
-                  <figcaption>{service.title} - {idx + 1}</figcaption>
-                </figure>
-              ))}
-            </div>
+        <div className="gov-section-header">
+          <div className="gov-section-badge">
+            <span>⚙️ নাগরিক পরিষেবা ডিরেক্টরি • Public Digital Services</span>
           </div>
-        ))}
-
-        {/* Quick Service Cards */}
-        <div className="service-cards">
-          <div className="service-card-item">
-            <span className="card-icon">📄</span>
-            <h4>সনদপত্র</h4>
-            <p>জন্ম, জাতি, আবাস—সব সনদ অনলাইনে আবেদনে।</p>
-          </div>
-          <div className="service-card-item">
-            <span className="card-icon">💧</span>
-            <h4>জল ও স্যানিটেশন</h4>
-            <p>জলসংযোগ, টয়লেট প্রকল্প ট্র্যাকিং ও গ্রিভ্যান্স।</p>
-          </div>
-          <div className="service-card-item">
-            <span className="card-icon">🛣️</span>
-            <h4>পরিকাঠামো</h4>
-            <p>রাস্তাঘাট, লাইট, ড্রেনেজ কাজের অগ্রগতি।</p>
-          </div>
-          <div className="service-card-item">
-            <span className="card-icon">🤝</span>
-            <h4>জনসেবা</h4>
-            <p>হেল্পডেস্ক, আবেদন স্ট্যাটাস, জনশুনানি।</p>
-          </div>
+          <h2>ডিজিটাল পদ্ধতিতে সহজ পঞ্চায়েত সেবা</h2>
+          <p className="gov-section-subtitle">
+            ঘরে বসেই স্বচ্ছ, দ্রুত ও জবাবদিহিমূলক নাগরিক পরিষেবা উপভোগ করুন। সরাসরি আবেদন করুন অথবা প্রয়োজনীয় তথ্য সংগ্রহ করুন।
+          </p>
         </div>
 
-        {/* Stats */}
-        <div className="services-stats">
-          <div className="stat-item">
-            <strong>১,২০০+</strong>
-            <span>সনদ ইস্যু</span>
-          </div>
-          <div className="stat-item">
-            <strong>৮৫+</strong>
-            <span>সম্পন্ন প্রকল্প</span>
-          </div>
-          <div className="stat-item">
-            <strong>৯৮%</strong>
-            <span>সন্তুষ্টি</span>
-          </div>
-          <div className="stat-item">
-            <strong>২৪×৭</strong>
-            <span>ডিজিটাল সেবা</span>
-          </div>
+        {/* Services Grid */}
+        <div className="gov-services-grid">
+          {servicesData.map((service) => (
+            <div key={service.id} className="gov-service-card">
+              <div className="gov-card-top">
+                <span className="gov-service-icon-box">{service.icon}</span>
+                <div className="gov-service-titles">
+                  <h3>{service.title}</h3>
+                  <span className="gov-service-sub">{service.titleEn}</span>
+                </div>
+              </div>
+
+              <p className="gov-service-desc">{service.description}</p>
+
+              <div className="gov-service-tags">
+                {service.tags.map((tag, idx) => (
+                  <span key={idx} className="gov-tag-chip">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              <div className="gov-service-action-wrap">
+                <button
+                  className="gov-service-btn"
+                  onClick={() => navigate(service.actionLink)}
+                >
+                  {service.actionText} →
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

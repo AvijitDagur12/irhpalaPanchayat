@@ -1,119 +1,113 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './ManageProfile.css';
+import React, { useEffect, useState, useCallback } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import api, { getAssetUrl } from "../services/api";
+import "./ManageProfile.css";
 
 const ManageProfile = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const { user, updateCurrentUser } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(true);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
-  
+
   // User details state
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    village: '',
-    photo: null
+    name: "",
+    email: "",
+    phone: "",
+    village: "",
+    photo: null,
   });
 
   // Password change state
   const [passwordData, setPasswordData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
 
   // Documents state
   const [documents, setDocuments] = useState([]);
   const [showDocUpload, setShowDocUpload] = useState(false);
   const [newDoc, setNewDoc] = useState({
-    name: '',
-    file: null
+    name: "",
+    file: null,
   });
 
+  const fetchUserDocuments = useCallback(async (userId) => {
+    try {
+      const res = await api.get(`/api/user-documents/${userId}`);
+      setDocuments(res.data || []);
+    } catch (err) {
+      console.error("Failed to load documents:", err);
+    }
+  }, []);
+
   useEffect(() => {
-    const userData = localStorage.getItem('user');
-    if (!userData) {
-      navigate('/');
+    if (!user) {
+      navigate("/auth");
     } else {
-      const user = JSON.parse(userData);
-      setUser(user);
       setFormData({
-        name: user.name || '',
-        email: user.email || '',
-        phone: user.phone || '',
-        village: user.village || '',
-        photo: null
+        name: user.name || "",
+        email: user.email || "",
+        phone: user.phone || "",
+        village: user.village || "",
+        photo: null,
       });
       fetchUserDocuments(user._id);
     }
-  }, [navigate]);
-
-  const fetchUserDocuments = async (userId) => {
-    try {
-      const res = await fetch(`https://checkirpala.onrender.com/api/user-documents/${userId}`);
-      const data = await res.json();
-      setDocuments(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  }, [user, navigate, fetchUserDocuments]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handlePhotoChange = (e) => {
-    setFormData({ ...formData, photo: e.target.files[0] });
+    setFormData((prev) => ({ ...prev, photo: e.target.files[0] }));
   };
 
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
-    setPasswordData({ ...passwordData, [name]: value });
+    setPasswordData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleDocInputChange = (e) => {
     const { name, value } = e.target;
-    setNewDoc({ ...newDoc, [name]: value });
+    setNewDoc((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleDocFileChange = (e) => {
-    setNewDoc({ ...newDoc, file: e.target.files[0] });
+    setNewDoc((prev) => ({ ...prev, file: e.target.files[0] }));
   };
 
   const updateProfile = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setMessage('');
+    setMessage("");
 
     try {
       const data = new FormData();
-      data.append('name', formData.name);
-      data.append('email', formData.email);
-      data.append('phone', formData.phone);
-      data.append('village', formData.village);
-      if (formData.photo) data.append('photo', formData.photo);
-      data.append('userId', user._id);
+      data.append("name", formData.name);
+      data.append("phone", formData.phone);
+      data.append("village", formData.village);
+      if (formData.photo) data.append("photo", formData.photo);
+      data.append("userId", user._id);
 
-      const res = await fetch('https://checkirpala.onrender.com/api/update-profile', {
-        method: 'PUT',
-        body: data
+      const res = await api.put("/api/update-profile", data, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
-      const result = await res.json();
-
-      if (res.ok) {
-        setMessage('Profile updated successfully!');
-        localStorage.setItem('user', JSON.stringify(result.user));
-        setUser(result.user);
-      } else {
-        setMessage('Error: ' + result.error);
+      if (res.data && res.data.user) {
+        setIsSuccess(true);
+        setMessage("প্রোফাইল সফলভাবে আপডেট করা হয়েছে! (Profile updated successfully!)");
+        updateCurrentUser(res.data.user);
       }
     } catch (err) {
-      setMessage('Operation failed!');
+      setIsSuccess(false);
+      setMessage(err.message || "Operation failed! Please try again.");
     } finally {
       setLoading(false);
     }
@@ -121,37 +115,36 @@ const ManageProfile = () => {
 
   const updatePassword = async (e) => {
     e.preventDefault();
-    
+
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      setMessage('New passwords do not match!');
+      setIsSuccess(false);
+      setMessage("New passwords do not match!");
+      return;
+    }
+
+    if (passwordData.newPassword.length < 6) {
+      setIsSuccess(false);
+      setMessage("New password must be at least 6 characters long.");
       return;
     }
 
     setLoading(true);
-    setMessage('');
+    setMessage("");
 
     try {
-      const res = await fetch('https://checkirpala.onrender.com/api/update-password', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: user._id,
-          currentPassword: passwordData.currentPassword,
-          newPassword: passwordData.newPassword
-        })
+      await api.put("/api/update-password", {
+        userId: user._id,
+        currentPassword: passwordData.currentPassword,
+        newPassword: passwordData.newPassword,
       });
 
-      const result = await res.json();
-
-      if (res.ok) {
-        setMessage('Password updated successfully!');
-        setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-        setShowPasswordForm(false);
-      } else {
-        setMessage('Error: ' + result.error);
-      }
+      setIsSuccess(true);
+      setMessage("পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে! (Password updated successfully!)");
+      setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+      setShowPasswordForm(false);
     } catch (err) {
-      setMessage('Operation failed!');
+      setIsSuccess(false);
+      setMessage(err.message || "Failed to update password. Please check current password.");
     } finally {
       setLoading(false);
     }
@@ -164,44 +157,41 @@ const ManageProfile = () => {
     setLoading(true);
     try {
       const data = new FormData();
-      data.append('name', newDoc.name);
-      data.append('file', newDoc.file);
-      data.append('userId', user._id);
+      data.append("name", newDoc.name);
+      data.append("file", newDoc.file);
+      data.append("userId", user._id);
 
-      const res = await fetch('https://checkirpala.onrender.com/api/upload-document', {
-        method: 'POST',
-        body: data
+      const res = await api.post("/api/upload-document", data, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
-      const result = await res.json();
-
-      if (res.ok) {
-        setDocuments([...documents, result.document]);
+      if (res.data && res.data.document) {
+        setDocuments((prev) => [res.data.document, ...prev]);
         setShowDocUpload(false);
-        setNewDoc({ name: '', file: null });
-      } else {
-        setMessage('Error uploading document');
+        setNewDoc({ name: "", file: null });
+        setIsSuccess(true);
+        setMessage("নথি সফলভাবে আপলোড করা হয়েছে! (Document uploaded to vault!)");
       }
     } catch (err) {
-      setMessage('Operation failed!');
+      setIsSuccess(false);
+      setMessage(err.message || "Error uploading document.");
     } finally {
       setLoading(false);
     }
   };
 
   const deleteDocument = async (docId) => {
-    if (!window.confirm('Delete this document?')) return;
+    if (!window.confirm("আপনি কি নিশ্চিত যে আপনি এই নথিটি মুছে ফেলতে চান?")) return;
 
     try {
-      const res = await fetch(`https://checkirpala.onrender.com/api/delete-document/${docId}`, {
-        method: 'DELETE'
-      });
-
-      if (res.ok) {
-        setDocuments(documents.filter(doc => doc._id !== docId));
-      }
+      await api.delete(`/api/delete-document/${docId}`);
+      setDocuments((prev) => prev.filter((doc) => doc._id !== docId));
+      setIsSuccess(true);
+      setMessage("নথি সফলভাবে মুছে ফেলা হয়েছে। (Document deleted.)");
     } catch (err) {
       console.error(err);
+      setIsSuccess(false);
+      setMessage("Failed to delete document.");
     }
   };
 
@@ -209,123 +199,231 @@ const ManageProfile = () => {
 
   return (
     <div className="profile-container">
-      <h2>Manage Your Profile</h2>
+      <div className="profile-header-bar">
+        <div>
+          <h2>নাগরিক প্রোফাইল ও নথি ভল্ট (Citizen Profile & Vault)</h2>
+          <p>আপনার ব্যক্তিগত বিবরণ এবং স্থায়ী নথিপত্র নিরাপদে সংরক্ষণ ও পরিচালনা করুন।</p>
+        </div>
+        <Link to="/dashboard" className="gov-btn gov-btn-outline">
+          ← Back to Dashboard
+        </Link>
+      </div>
 
-      {message && <div className="message">{message}</div>}
+      {message && (
+        <div className={`gov-alert ${isSuccess ? "gov-alert-success" : "gov-alert-error"}`}>
+          {message}
+        </div>
+      )}
 
       {/* Profile Details Form */}
       <form onSubmit={updateProfile} className="profile-form">
-        <h3>Personal Details</h3>
-            <div className="form-group">
-            <label>Profile Photo</label> 
-            <input type="file" accept="image/*" onChange={handlePhotoChange} />
-            {user.photo && !formData.photo && (
-              <img src={`https://checkirpala.onrender.com/uploads/${user.photo}`} alt="Profile" className="profile-preview" />
+        <h3>ব্যক্তিগত বিবরণ (Personal Details)</h3>
+        <div className="profile-photo-row">
+          <div className="profile-avatar-wrap">
+            {user.photo ? (
+              <img src={getAssetUrl(user.photo)} alt="Profile Avatar" className="profile-preview" />
+            ) : (
+              <div className="profile-avatar-placeholder">{user.name?.charAt(0).toUpperCase()}</div>
             )}
           </div>
-        {/* Row 1: Name, Email, Phone */}
-        <div className="form-row">
-          <div className="form-group">
-            <label>Name</label>
-            <input type="text" name="name" value={formData.name} readOnly className="readonly" />
-            <small>Name cannot be changed</small>
-          </div>
-
-          <div className="form-group">
-            <label>Email</label>
-            <input type="email" name="email" value={formData.email} onChange={handleInputChange} required readOnly />
-            <small>Email cannot be changed</small>
-          </div>
-
-          <div className="form-group">
-            <label>Phone</label>
-            <input type="text" name="phone" value={formData.phone} onChange={handleInputChange} required />
+          <div className="form-group" style={{ flexGrow: 1 }}>
+            <label>প্রোফাইল ছবি পরিবর্তন করুন (Change Profile Photo)</label>
+            <input type="file" accept="image/jpeg, image/png, image/jpg" onChange={handlePhotoChange} />
+            <small className="gov-input-hint">অনুমোদিত ফরম্যাট: JPG, PNG (সর্বোচ্চ 5MB)</small>
           </div>
         </div>
 
-        {/* Row 2: Village, Profile Photo, and Button */}
-        
         <div className="form-row">
           <div className="form-group">
-            <label>Village</label>
+            <label>সম্পূর্ণ নাম (Full Name)</label>
+            <input type="text" name="name" value={formData.name} onChange={handleInputChange} required />
+          </div>
+
+          <div className="form-group">
+            <label>ইমেল ঠিকানা (Email - Readonly)</label>
+            <input type="email" name="email" value={formData.email} readOnly className="readonly" />
+            <small className="gov-input-hint">ইমেল ঠিকানা পরিবর্তনযোগ্য নয়</small>
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label>মোবাইল নম্বর (Phone)</label>
+            <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} required />
+          </div>
+
+          <div className="form-group">
+            <label>গ্রামের নাম (Village)</label>
             <input type="text" name="village" value={formData.village} onChange={handleInputChange} required />
           </div>
+        </div>
 
-      
-
-          <div className="form-group button-group">
-            <button type="submit" disabled={loading} className="update-btn">
-              {loading ? 'Updating...' : 'Update Profile'}
-            </button>
-          </div>
+        <div className="button-group">
+          <button type="submit" className="gov-btn gov-btn-primary" disabled={loading}>
+            {loading ? "সংরক্ষণ করা হচ্ছে..." : "প্রোফাইল আপডেট করুন / Save Changes"}
+          </button>
         </div>
       </form>
 
       {/* Password Change Section */}
       <div className="password-section">
-        <h3>Password</h3>
-        {!showPasswordForm ? (
-          <button onClick={() => setShowPasswordForm(true)} className="change-password-btn">Change Password</button>
-        ) : (
+        <div className="password-header">
+          <h3>নিরাপত্তা ও পাসওয়ার্ড (Security & Password)</h3>
+          {!showPasswordForm && (
+            <button
+              type="button"
+              className="gov-btn gov-btn-outline"
+              onClick={() => setShowPasswordForm(true)}
+            >
+              🔑 পাসওয়ার্ড পরিবর্তন করুন (Change Password)
+            </button>
+          )}
+        </div>
+
+        {showPasswordForm && (
           <form onSubmit={updatePassword} className="password-form">
             <div className="form-row">
               <div className="form-group">
-                <label>Current Password</label>
-                <input type="password" name="currentPassword" value={passwordData.currentPassword} onChange={handlePasswordChange} required />
+                <label>বর্তমান পাসওয়ার্ড (Current Password) *</label>
+                <input
+                  type="password"
+                  name="currentPassword"
+                  value={passwordData.currentPassword}
+                  onChange={handlePasswordChange}
+                  required
+                />
               </div>
+
               <div className="form-group">
-                <label>New Password</label>
-                <input type="password" name="newPassword" value={passwordData.newPassword} onChange={handlePasswordChange} required />
+                <label>নতুন পাসওয়ার্ড (New Password) *</label>
+                <input
+                  type="password"
+                  name="newPassword"
+                  value={passwordData.newPassword}
+                  onChange={handlePasswordChange}
+                  placeholder="Min 6 characters"
+                  required
+                />
               </div>
+
               <div className="form-group">
-                <label>Confirm Password</label>
-                <input type="password" name="confirmPassword" value={passwordData.confirmPassword} onChange={handlePasswordChange} required />
+                <label>পাসওয়ার্ড নিশ্চিত করুন (Confirm Password) *</label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={passwordData.confirmPassword}
+                  onChange={handlePasswordChange}
+                  required
+                />
               </div>
             </div>
+
             <div className="button-group">
-              <button type="submit" disabled={loading}>Update Password</button>
-              <button type="button" onClick={() => setShowPasswordForm(false)}>Cancel</button>
+              <button type="submit" className="gov-btn gov-btn-secondary" disabled={loading}>
+                {loading ? "আপডেট হচ্ছে..." : "পাসওয়ার্ড নিশ্চিত করুন / Update Password"}
+              </button>
+              <button
+                type="button"
+                className="gov-btn gov-btn-outline"
+                onClick={() => setShowPasswordForm(false)}
+              >
+                বাতিল (Cancel)
+              </button>
             </div>
           </form>
         )}
       </div>
 
-      {/* Documents Section */}
+      {/* Documents Vault Section */}
       <div className="documents-section">
-        <h3>Your Documents</h3>
-        
-        <div className="documents-list">
-          {documents.map(doc => (
-            <div key={doc._id} className="document-item">
-              <span>{doc.name}</span>
-              <div className="doc-actions">
-                <a href={`https://checkirpala.onrender.com/uploads/${doc.file}`} target="_blank" rel="noopener noreferrer">View</a>
-                <button onClick={() => deleteDocument(doc._id)}>Delete</button>
-              </div>
-            </div>
-          ))}
+        <div className="documents-header">
+          <div>
+            <h3>আপনার ডিজিটাল নথি ভল্ট (Citizen Document Vault)</h3>
+            <p className="gov-input-hint">আধার কার্ড, ভোটার কার্ড বা শিক্ষাগত সনদপত্র নিরাপদে সংরক্ষণ করুন।</p>
+          </div>
+          {!showDocUpload && (
+            <button className="gov-btn gov-btn-primary" onClick={() => setShowDocUpload(true)}>
+              + নতুন নথি যোগ করুন (Add Document)
+            </button>
+          )}
         </div>
 
-        {!showDocUpload ? (
-          <button className="add-doc-btn" onClick={() => setShowDocUpload(true)}>+ Add Document</button>
-        ) : (
+        {showDocUpload && (
           <form onSubmit={uploadDocument} className="upload-doc-form">
             <div className="form-row">
               <div className="form-group">
-                <label>Document Name</label>
-                <input type="text" name="name" value={newDoc.name} onChange={handleDocInputChange} required />
+                <label>নথির নাম (Document Title) *</label>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="উদাঃ আধার কার্ড / ভোটার আইডি"
+                  value={newDoc.name}
+                  onChange={handleDocInputChange}
+                  required
+                />
               </div>
               <div className="form-group">
-                <label>File</label>
-                <input type="file" onChange={handleDocFileChange} required />
+                <label>ফাইল নির্বাচন করুন (Select PDF or Image) *</label>
+                <input
+                  type="file"
+                  accept="application/pdf, image/jpeg, image/png"
+                  onChange={handleDocFileChange}
+                  required
+                />
               </div>
             </div>
             <div className="button-group">
-              <button type="submit" disabled={loading}>Upload</button>
-              <button type="button" onClick={() => setShowDocUpload(false)}>Cancel</button>
+              <button type="submit" className="gov-btn gov-btn-primary" disabled={loading}>
+                {loading ? "আপলোড হচ্ছে..." : "নথি আপলোড করুন / Upload"}
+              </button>
+              <button
+                type="button"
+                className="gov-btn gov-btn-outline"
+                onClick={() => setShowDocUpload(false)}
+              >
+                বাতিল (Cancel)
+              </button>
             </div>
           </form>
         )}
+
+        <div className="documents-list">
+          {documents.length > 0 ? (
+            documents.map((doc) => (
+              <div key={doc._id} className="document-item">
+                <div className="doc-info">
+                  <span className="doc-icon">📑</span>
+                  <div>
+                    <strong>{doc.name}</strong>
+                    <small>{new Date(doc.uploadedAt || doc.createdAt).toLocaleDateString("en-IN")}</small>
+                  </div>
+                </div>
+                <div className="doc-actions">
+                  <a
+                    href={getAssetUrl(doc.file)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="gov-btn gov-btn-outline"
+                  >
+                    👁️ দেখুন (View)
+                  </a>
+                  <button
+                    onClick={() => deleteDocument(doc._id)}
+                    className="gov-btn gov-btn-outline"
+                    style={{ color: "#b91c1c", borderColor: "#fecaca" }}
+                  >
+                    🗑️ মুছুন (Delete)
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="empty-docs-note">
+              <span>📂</span>
+              <p>আপনার ভল্টে এখনো কোনো নথি আপলোড করা নেই।</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
