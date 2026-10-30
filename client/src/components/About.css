@@ -328,3 +328,124 @@
     text-align: center;
   }
 }
+/* ============ MEETING GALLERY (replaces old Priority Services) ============ */
+.gov-meeting-gallery-section {
+  margin: 44px 0 0;
+  padding: 32px 0;
+  border-top: 1px solid #e2e8f0;
+}
+
+.gov-meeting-gallery-section h3 {
+  text-align: center;
+  color: #0f3b6c;
+  font-size: 1.4rem;
+  margin: 0 0 6px;
+  font-weight: 800;
+}
+
+.gov-meeting-subtitle {
+  text-align: center;
+  color: #64748b;
+  font-size: 0.85rem;
+  margin: 0 0 24px;
+  letter-spacing: 0.2px;
+}
+
+.gov-meeting-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.gov-meeting-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(15, 59, 108, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.gov-meeting-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(15, 59, 108, 0.15);
+}
+
+.gov-meeting-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0f3b6c 0%, #1e5a96 100%);
+}
+
+.gov-meeting-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.gov-meeting-card:hover .gov-meeting-img {
+  transform: scale(1.06);
+}
+
+.gov-meeting-img-wrap.img-fallback::after {
+  content: "🏛️";
+  font-size: 3rem;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.4;
+  color: #ffffff;
+}
+
+.gov-meeting-caption {
+  padding: 14px 18px;
+  text-align: center;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}
+
+.gov-meeting-caption strong {
+  display: block;
+  color: #0f3b6c;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+
+.gov-meeting-caption span {
+  font-size: 0.75rem;
+  color: #64748b;
+  letter-spacing: 0.3px;
+  font-weight: 500;
+}
+
+@media (max-width: 900px) {
+  .gov-meeting-gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .gov-meeting-img-wrap {
+    height: 170px;
+  }
+}
+
+@media (max-width: 600px) {
+  .gov-meeting-gallery {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .gov-meeting-img-wrap {
+    height: 190px;
+  }
+  .gov-meeting-gallery-section h3 {
+    font-size: 1.15rem;
+  }
+  .gov-meeting-gallery-section {
+    padding: 24px 0;
+    margin-top: 32px;
+  }
+}

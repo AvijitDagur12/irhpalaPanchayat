@@ -48,26 +48,42 @@ const About = () => {
     },
   ];
 
-  const coreServices = [
+  const meetingImages = [
     {
-      icon: "📜",
-      title: "ডিজিটাল সনদপত্র / Certificates",
-      desc: "আয়, স্থায়ী বাসিন্দা, চারিত্রিক ও অন্যান্য সরকারি সনদপত্র সরাসরি অনলাইন প্রক্রিয়াকরণ।",
+      src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjouuO-tcXYz0u1ZTD5-UwAQ6b7JgzLvXj3QmUrM03vc2PHrL8SR9z_tGC&s=10",
+      alt: "Panchayat Committee Meeting",
+      caption: "পঞ্চায়েত কমিটি সভা",
+      captionEn: "Committee Meeting",
     },
     {
-      icon: "💧",
-      title: "পানীয় জল ও স্যানিটেশন / Utilities",
-      desc: "মিশন নির্মল বাংলা ও জল স্বপ্ন প্রকল্পের মাধ্যমে গ্রামীণ পরিবারে বিশুদ্ধ পানীয় জল সরবরাহ।",
+      src: "https://newsarenaindia.com/_next/image?url=https%3A%2F%2Fimages.newsarenaindia.com%2Fbengal-cabinetjpg_1780234368816.jpg&w=1920&q=75",
+      alt: "Administrative Office Discussion",
+      caption: "প্রশাসনিক আলোচনা",
+      captionEn: "Office Discussion",
     },
     {
-      icon: "🏗️",
-      title: "পরিকাঠামো উন্নয়ন / Infrastructure",
-      desc: "গ্রামীণ পাকা রাস্তা, কালভার্ট, বৃষ্টির জল নিষ্কাশন ও সৌর বিদ্যুৎ বাতির রক্ষণাবেক্ষণ।",
+      src: "https://images.maher.ac.in/wp-content/uploads/2024/08/Grama-Sabha-Meeting-2-1024x768.jpg?strip=all",
+      alt: "Gram Sabha Public Meeting",
+      caption: "গ্রাম সভা ও জনসংযোগ",
+      captionEn: "Gram Sabha Meeting",
     },
     {
-      icon: "📢",
-      title: "নাগরিক অভিযোগ প্রতিকার / Grievance Cell",
-      desc: "দ্রুত ও সময়বদ্ধ জনঅভিযোগ নিষ্পত্তি এবং স্বচ্ছ প্রশাসনিক ব্যবস্থা।",
+      src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-fqDNmYpgtCKepKBYkvXnFRa5vQbxxQy7X6P_WwVHeeMV_TFdi9uByNM&s=10",
+      alt: "CM Review Meeting",
+      caption: "মুখ্যমন্ত্রীর পর্যালোচনা সভা",
+      captionEn: "Chief Minister's Review Meeting",
+    },
+    {
+      src: "https://pti-xml.multitvsolution.com/ptiimage/gall_content/2022/PTI05_09_2026_000071B.jpg",
+      alt: "Joint Meeting with Prime Minister",
+      caption: "প্রধানমন্ত্রীর সাথে যৌথ বৈঠক",
+      captionEn: "Joint Meeting with the Prime Minister",
+    },
+    {
+      src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRG5V77SSZ58MmQ5dUEZnoHdufAhxxkTMUu6N1VVnGQcTcj0WP2762ETy4&s=10",
+      alt: "CM Interaction with Students",
+      caption: "মুখ্যমন্ত্রীর সাথে শিক্ষার্থী মিলন",
+      captionEn: "Chief Minister's Interaction with Students",
     },
   ];
 
@@ -100,7 +116,6 @@ const About = () => {
 
         {/* Two Column Overview */}
         <div className="gov-about-grid">
-          {/* Left: Administrative Profile */}
           <div className="gov-about-card">
             <h3>📖 প্রশাসনিক বিবরণ / Institutional Overview</h3>
             <p>
@@ -122,7 +137,6 @@ const About = () => {
             </div>
           </div>
 
-          {/* Right: Key Objectives & Mission */}
           <div className="gov-about-card">
             <h3>🎯 লক্ষ্য ও উদ্দেশ্য / Vision & Objectives</h3>
             <div className="gov-vision-box">
@@ -144,15 +158,32 @@ const About = () => {
           </div>
         </div>
 
-        {/* Core Services Grid */}
-        <div className="gov-services-summary">
-          <h3>মুখ্য সেবাসমূহ / Priority Digital Services</h3>
-          <div className="gov-services-cards">
-            {coreServices.map((srv, idx) => (
-              <div key={idx} className="gov-service-mini-card">
-                <span className="gov-service-mini-icon">{srv.icon}</span>
-                <h4>{srv.title}</h4>
-                <p>{srv.desc}</p>
+        {/* Meeting Gallery (replaces old Priority Services block) */}
+        <div className="gov-meeting-gallery-section">
+          <h3>পঞ্চায়েত সভা ও প্রশাসনিক কার্যক্রম</h3>
+          <p className="gov-meeting-subtitle">
+            Irhpala Gram Panchayat • Committee Meetings & Field Operations
+          </p>
+
+          <div className="gov-meeting-gallery">
+            {meetingImages.map((img, idx) => (
+              <div key={idx} className="gov-meeting-card">
+                <div className="gov-meeting-img-wrap">
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    className="gov-meeting-img"
+                    loading="lazy"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.parentElement.classList.add("img-fallback");
+                    }}
+                  />
+                </div>
+                <div className="gov-meeting-caption">
+                  <strong>{img.caption}</strong>
+                  <span>{img.captionEn}</span>
+                </div>
               </div>
             ))}
           </div>
