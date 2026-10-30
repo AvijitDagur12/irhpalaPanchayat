@@ -1,24 +1,14 @@
-/* ApplicationForm.css */
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #f5f7fa;
-  padding: 5px;
-}
+/* ApplicationForm.css - Official Government Portal Design */
 
 .form-container {
   max-width: 1000px;
   margin: 2rem auto;
-  padding: 2rem;
-  background: white;
-  border: 2px solid #1e3c2c;
-  box-shadow: 10px 10px 0 rgba(30, 60, 44, 0.15);
+  padding: 2.2rem;
+  background: #ffffff;
+  border: 1px solid var(--gov-border, #e2e8f0);
+  border-radius: var(--radius-lg, 10px);
+  box-shadow: var(--shadow-md, 0 4px 12px rgba(15, 23, 42, 0.06));
+  font-family: 'Inter', 'Noto Sans Bengali', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 /* Header */
@@ -28,18 +18,18 @@ body {
 }
 
 .form-header h2 {
-  font-size: 2rem;
-  color: #1e3c2c;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  border-bottom: 3px solid #ffd966;
+  font-size: 1.85rem;
+  color: var(--gov-primary, #0f3b6c);
+  letter-spacing: 0.5px;
+  border-bottom: 3px solid var(--gov-accent, #b45309);
   display: inline-block;
   padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 /* Circular Step Indicator */
 .steps {
-  margin-bottom: 3rem;
+  margin-bottom: 2.5rem;
   padding: 0 1rem;
 }
 
@@ -60,38 +50,39 @@ body {
 }
 
 .step-circle {
-  width: 50px;
-  height: 50px;
-  background: white;
-  border: 3px solid #d0d0d0;
+  width: 48px;
+  height: 48px;
+  background: #ffffff;
+  border: 2px solid var(--gov-border-subtle, #cbd5e1);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.6rem;
   position: relative;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
 }
 
 .step-number {
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: #666;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--gov-text-muted, #475569);
 }
 
 .step-item.active .step-circle {
-  border-color: #1e3c2c;
-  background: #1e3c2c;
-  transform: scale(1.1);
-  box-shadow: 0 0 0 4px rgba(30, 60, 44, 0.1);
+  border-color: var(--gov-primary, #0f3b6c);
+  background: var(--gov-primary, #0f3b6c);
+  transform: scale(1.08);
+  box-shadow: 0 0 0 4px rgba(15, 59, 108, 0.15);
 }
 
 .step-item.active .step-number {
-  color: white;
+  color: #ffffff;
 }
 
 .step-item.completed .step-circle {
-  border-color: #4CAF50;
-  background: #4CAF50;
+  border-color: var(--gov-secondary, #166534);
+  background: var(--gov-secondary, #166534);
 }
 
 .step-item.completed .step-number {
@@ -99,34 +90,34 @@ body {
 }
 
 .check-mark {
-  color: white;
-  font-size: 1.5rem;
+  color: #ffffff;
+  font-size: 1.25rem;
   font-weight: bold;
 }
 
 .step-label {
-  font-size: 0.9rem;
-  color: #666;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-size: 0.85rem;
+  color: var(--gov-text-muted, #64748b);
+  font-weight: 600;
+  text-align: center;
 }
 
 .step-item.active .step-label {
-  color: #1e3c2c;
-  font-weight: 600;
+  color: var(--gov-primary, #0f3b6c);
+  font-weight: 700;
 }
 
 .step-line {
   height: 3px;
-  background: #d0d0d0;
+  background: var(--gov-border, #e2e8f0);
   flex: 1;
   margin: 0 10px;
-  margin-bottom: 2rem;
+  margin-bottom: 1.8rem;
+  transition: background-color 0.25s ease;
 }
 
 .step-line.completed {
-  background: #4CAF50;
+  background: var(--gov-secondary, #166534);
 }
 
 /* Form Steps */
@@ -135,26 +126,26 @@ body {
 }
 
 .form-step h3 {
-  font-size: 1.3rem;
-  color: #1e3c2c;
-  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  color: var(--gov-primary, #0f3b6c);
+  margin-bottom: 1.25rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #ffd966;
+  border-bottom: 2px solid var(--gov-border, #e2e8f0);
 }
 
 .form-step h4 {
-  font-size: 1.1rem;
-  color: #333;
+  font-size: 1.05rem;
+  color: var(--gov-text, #1e293b);
   margin: 1.5rem 0 1rem;
-  padding-bottom: 0.3rem;
-  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--gov-border, #e2e8f0);
 }
 
 /* Form Grid Layout */
 .form-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
+  gap: 1.2rem;
   margin-bottom: 1rem;
 }
 
@@ -165,12 +156,10 @@ body {
 
 .form-group label {
   display: block;
-  margin-bottom: 0.3rem;
-  font-weight: 500;
-  color: #1e3c2c;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+  color: var(--gov-text, #334155);
   font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
 }
 
 /* Input Styles */
@@ -178,12 +167,13 @@ body {
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 0.6rem 0.8rem;
-  border: 1.5px solid #d0d0d0;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
-  background: #fafafa;
-  color: #333;
+  padding: 10px 14px;
+  border: 1px solid var(--gov-border-subtle, #cbd5e1);
+  border-radius: var(--radius-sm, 6px);
+  font-size: 0.92rem;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  background: #ffffff;
+  color: var(--gov-text, #0f172a);
   font-family: inherit;
 }
 
@@ -191,70 +181,71 @@ body {
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #1e3c2c;
-  background: white;
-  box-shadow: 0 0 0 2px rgba(30, 60, 44, 0.1);
+  border-color: var(--gov-primary, #0f3b6c);
+  box-shadow: 0 0 0 3px rgba(15, 59, 108, 0.12);
 }
 
 .form-group input.readonly {
-  background: #f0f0f0;
-  border-color: #ccc;
-  color: #555;
+  background: #f1f5f9;
+  border-color: var(--gov-border, #e2e8f0);
+  color: #64748b;
   cursor: not-allowed;
 }
 
 /* Textarea */
 .form-group textarea {
   resize: vertical;
-  min-height: 60px;
+  min-height: 80px;
 }
 
 /* Radio Group */
 .radio-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.2rem;
-  padding: 0.5rem 0;
+  gap: 1.4rem;
+  padding: 0.4rem 0;
 }
 
 .radio-group label {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
-  font-weight: 400;
+  gap: 0.4rem;
+  font-weight: 500;
   cursor: pointer;
-  color: #333;
+  color: var(--gov-text, #1e293b);
   font-size: 0.9rem;
-  text-transform: none;
 }
 
 .radio-group input[type="radio"] {
   width: 16px;
   height: 16px;
   margin: 0;
+  accent-color: var(--gov-primary, #0f3b6c);
 }
 
 /* File Input */
 .form-group input[type="file"] {
-  padding: 0.4rem;
-  background: #f5f5f5;
-  border: 1.5px dashed #1e3c2c;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border: 1.5px dashed var(--gov-border-subtle, #cbd5e1);
   font-size: 0.85rem;
 }
 
 .form-group input[type="file"]::file-selector-button {
-  background: #1e3c2c;
-  color: white;
-  border: 1.5px solid #0f2a1b;
-  padding: 0.4rem 1rem;
+  background: var(--gov-primary, #0f3b6c);
+  color: #ffffff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
   margin-right: 1rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.18s ease;
   font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .form-group input[type="file"]::file-selector-button:hover {
-  background: #0f2a1b;
+  background: var(--gov-primary-hover, #092648);
 }
 
 /* Form Buttons */
@@ -264,51 +255,56 @@ body {
   gap: 1rem;
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 2px solid #1e3c2c;
+  border-top: 1px solid var(--gov-border, #e2e8f0);
 }
 
 .form-buttons button {
-  padding: 0.7rem 2rem;
-  border: 2px solid #1e3c2c;
-  font-size: 0.9rem;
+  padding: 10px 24px;
+  min-height: 42px;
+  border-radius: var(--radius-sm, 6px);
+  border: 1px solid transparent;
+  font-size: 0.92rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  transition: all 0.18s ease;
+  letter-spacing: 0.3px;
   min-width: 140px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .prev-btn {
-  background: white;
-  color: #1e3c2c;
+  background: #ffffff;
+  color: var(--gov-text, #1e293b);
+  border-color: var(--gov-border-subtle, #cbd5e1);
 }
 
 .prev-btn:hover {
-  background: #f0f0f0;
-  transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  background: #f1f5f9;
+  border-color: var(--gov-primary, #0f3b6c);
+  color: var(--gov-primary, #0f3b6c);
 }
 
 .next-btn, .submit-btn {
-  background: #1e3c2c;
-  color: white;
+  background: var(--gov-primary, #0f3b6c);
+  color: #ffffff;
+  border-color: var(--gov-primary, #0f3b6c);
 }
 
 .next-btn:hover:not(:disabled),
-.submit-btn:hover {
-  background: #0f2a1b;
+.submit-btn:hover:not(:disabled) {
+  background: var(--gov-primary-hover, #092648);
+  border-color: var(--gov-primary-hover, #092648);
   transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(30, 60, 44, 0.2);
 }
 
 .next-btn.disabled,
-.next-btn:disabled {
-  opacity: 0.5;
+.next-btn:disabled,
+.submit-btn:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
-  pointer-events: none;
-  background: #999;
-  border-color: #666;
+  transform: none;
 }
 
 /* Success Popup */
@@ -318,71 +314,86 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(2px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 2500;
+  padding: 20px;
 }
 
 .popup {
-  background: white;
-  padding: 2rem;
+  background: #ffffff;
+  padding: 2.2rem;
   text-align: center;
-  border: 3px solid #1e3c2c;
-  box-shadow: 10px 10px 0 rgba(30, 60, 44, 0.2);
-  max-width: 380px;
-  width: 90%;
+  border-radius: var(--radius-lg, 10px);
+  box-shadow: var(--shadow-lg, 0 10px 25px -5px rgba(0, 0, 0, 0.2));
+  max-width: 440px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .popup h3 {
-  color: #1e3c2c;
-  font-size: 1.3rem;
-  margin-bottom: 1rem;
+  color: var(--gov-primary, #0f3b6c);
+  font-size: 1.35rem;
+  margin-bottom: 0.8rem;
 }
 
 .popup h2 {
-  font-size: 1.8rem;
-  color: #1e3c2c;
-  background: #ffd966;
-  padding: 0.5rem 1rem;
-  border: 2px solid #1e3c2c;
+  font-size: 1.5rem;
+  color: var(--gov-primary, #0f3b6c);
+  background: #eff6ff;
+  padding: 0.6rem 1.2rem;
+  border: 1.5px dashed var(--gov-primary, #0f3b6c);
+  border-radius: 6px;
   display: inline-block;
   margin: 1rem 0;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
 }
 
 .popup p.small {
-  color: #666;
+  color: #64748b;
   font-size: 0.85rem;
   margin-bottom: 1.5rem;
+  line-height: 1.5;
 }
 
 .popup button {
-  background: #1e3c2c;
-  color: white;
-  border: 2px solid #0f2a1b;
-  padding: 0.7rem 2rem;
-  font-size: 0.9rem;
+  background: var(--gov-primary, #0f3b6c);
+  color: #ffffff;
+  border: 1px solid var(--gov-primary, #0f3b6c);
+  border-radius: 6px;
+  padding: 10px 24px;
+  font-size: 0.92rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.18s ease;
 }
 
 .popup button:hover {
-  background: #0f2a1b;
+  background: var(--gov-primary-hover, #092648);
+}
+
+/* Error message styling */
+.error-text {
+  color: var(--gov-danger, #b91c1c);
+  font-size: 0.78rem;
+  margin-top: 4px;
+  display: block;
 }
 
 /* Responsive Design */
-
-/* Tablet */
 @media screen and (max-width: 768px) {
   .form-container {
-    margin: 1rem;
-    padding: 1.5rem;
+    margin: 1rem auto;
+    padding: 1.5rem 1.2rem;
+    width: 95%;
   }
 
   .form-header h2 {
-    font-size: 1.5rem;
+    font-size: 1.45rem;
   }
 
   .step-circle {
@@ -391,7 +402,7 @@ body {
   }
 
   .step-number {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
   .step-label {
@@ -404,7 +415,7 @@ body {
   }
 
   .form-buttons {
-    flex-direction: column;
+    flex-direction: column-reverse;
   }
 
   .form-buttons button {
@@ -412,20 +423,16 @@ body {
   }
 }
 
-/* Mobile */
 @media screen and (max-width: 480px) {
   .form-container {
-    margin: 0.5rem;
-    padding: 1rem;
-  }
-
-  .form-header h2 {
-    font-size: 1.2rem;
+    margin: 0.5rem auto;
+    padding: 1.2rem 1rem;
   }
 
   .step-indicator {
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.8rem;
+    align-items: flex-start;
   }
 
   .step-line {
@@ -434,37 +441,19 @@ body {
 
   .step-item {
     flex-direction: row;
-    gap: 1rem;
+    gap: 0.8rem;
     width: 100%;
   }
 
   .step-circle {
-    width: 35px;
-    height: 35px;
+    width: 34px;
+    height: 34px;
     margin-bottom: 0;
   }
 
   .step-label {
-    font-size: 0.9rem;
-  }
-
-  .form-step h3 {
-    font-size: 1.1rem;
-  }
-
-  .form-step h4 {
-    font-size: 1rem;
-  }
-
-  .form-group label {
-    font-size: 0.8rem;
-  }
-
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    padding: 0.5rem;
     font-size: 0.85rem;
+    text-align: left;
   }
 
   .radio-group {
@@ -473,14 +462,6 @@ body {
   }
 
   .popup {
-    padding: 1.2rem;
-  }
-
-  .popup h3 {
-    font-size: 1.1rem;
-  }
-
-  .popup h2 {
-    font-size: 1.3rem;
+    padding: 1.5rem 1.2rem;
   }
 }

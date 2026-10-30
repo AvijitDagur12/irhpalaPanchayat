@@ -15,6 +15,10 @@ const Footer = () => {
                 src="https://iconape.com/wp-content/files/bt/257232/svg/257232.svg"
                 alt="Government Emblem"
                 className="gov-footer-emblem"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg";
+                }}
               />
               <div>
                 <h3>ইরপালা গ্রাম পঞ্চায়েত</h3>

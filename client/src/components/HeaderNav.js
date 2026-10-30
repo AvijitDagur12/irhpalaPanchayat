@@ -35,6 +35,10 @@ const HeaderNav = () => {
               src="https://iconape.com/wp-content/files/bt/257232/svg/257232.svg"
               alt="National Emblem of India"
               className="gov-header-logo"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg";
+              }}
             />
             <div className="gov-brand-titles">
               <span className="gov-brand-bengali">ইরপালা গ্রাম পঞ্চায়েত</span>

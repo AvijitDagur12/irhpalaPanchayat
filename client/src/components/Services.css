@@ -102,12 +102,13 @@
   color: #0f3b6c;
   border: 1px solid #bfdbfe;
   padding: 9px 16px;
+  min-height: 40px;
   font-size: 0.85rem;
   font-weight: 600;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   width: 100%;
-  transition: all 0.15s ease;
+  transition: all 0.18s ease;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -117,6 +118,12 @@
   background-color: #0f3b6c;
   color: #ffffff;
   border-color: #0f3b6c;
+  transform: translateY(-1px);
+}
+
+.gov-service-btn:focus-visible {
+  outline: 2px solid #0f3b6c;
+  outline-offset: 2px;
 }
 
 @media (max-width: 992px) {

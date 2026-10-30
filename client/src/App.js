@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, Link } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
@@ -221,15 +221,18 @@ function App() {
             path="*"
             element={
               <PublicLayout>
-                <div style={{ textAlign: "center", padding: "80px 20px" }}>
-                  <h1 style={{ fontSize: "3rem", color: "#0f3b6c" }}>404</h1>
-                  <h2>পৃষ্ঠাটি খুঁজে পাওয়া যায়নি (Page Not Found)</h2>
-                  <p style={{ color: "#64748b", margin: "12px 0 24px" }}>
-                    The page you are looking for does not exist or has been relocated within the portal.
+                <div style={{ textAlign: "center", padding: "80px 20px", maxWidth: "600px", margin: "0 auto" }}>
+                  <div style={{ fontSize: "3.5rem", marginBottom: "8px" }}>🏛️</div>
+                  <h1 style={{ fontSize: "3.2rem", color: "#0f3b6c", marginBottom: "8px" }}>404</h1>
+                  <h2 style={{ fontSize: "1.4rem", color: "#0f172a", marginBottom: "8px" }}>
+                    পৃষ্ঠাটি খুঁজে পাওয়া যায়নি (Page Not Found)
+                  </h2>
+                  <p style={{ color: "#64748b", margin: "12px 0 24px", lineHeight: "1.6" }}>
+                    The page you are looking for does not exist, has been removed, or has been relocated within the Panchayat portal.
                   </p>
-                  <a href="/" className="gov-btn gov-btn-primary">
+                  <Link to="/" className="gov-btn gov-btn-primary">
                     ← Return to Panchayat Home
-                  </a>
+                  </Link>
                 </div>
               </PublicLayout>
             }

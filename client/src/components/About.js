@@ -165,7 +165,15 @@ const About = () => {
             {leaders.map((leader, idx) => (
               <div key={idx} className="gov-leader-card">
                 <div className="gov-leader-img-wrapper">
-                  <img src={leader.image} alt={leader.name} className="gov-leader-img" />
+                  <img
+                    src={leader.image}
+                    alt={leader.name}
+                    className="gov-leader-img"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.style.display = "none";
+                    }}
+                  />
                   <span className="gov-leader-badge">{leader.role}</span>
                 </div>
                 <div className="gov-leader-info">
