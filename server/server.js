@@ -35,6 +35,8 @@ if (!fs.existsSync(uploadDir)) {
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:5173",
+  "https://irhpala-panchayat-client.vercel.app",
+  "https://irhpala-panchayat-client-4mkv17ya3.vercel.app",
   process.env.CLIENT_URL,
 ].filter(Boolean);
 
