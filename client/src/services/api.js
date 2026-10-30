@@ -1,10 +1,9 @@
 import axios from "axios";
 
-// Default to environment variable, fallback to localhost:5000
 const API_BASE_URL =
   process.env.REACT_APP_API_URL ||
   (process.env.NODE_ENV === "production"
-    ? "https://panchayat-backend-new.onrender.com"
+    ? "https://irhpalapanchayat.onrender.com"
     : "http://localhost:5000");
 
 const api = axios.create({
@@ -15,7 +14,6 @@ const api = axios.create({
 // Request Interceptor: Attach authentication token
 api.interceptors.request.use(
   (config) => {
-    // Check for admin token first, then citizen token
     const adminToken = localStorage.getItem("admin_token");
     const citizenToken = localStorage.getItem("citizen_token");
     const token = adminToken || citizenToken;
@@ -41,9 +39,7 @@ api.interceptors.response.use(
       error.message ||
       "An unexpected server error occurred.";
 
-    // Handle token expiration
     if (error.response?.status === 401) {
-      // Clear expired state if needed
       console.warn("Session expired or unauthorized request:", message);
     }
 
